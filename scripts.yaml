@@ -1,0 +1,6 @@
+s1:
+  script: example/script1.py
+  description: Este script no hace nada
+s2:
+  script: example/script2.py
+  description: Este script no hace nada
