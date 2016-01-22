@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>{{script_name}}</title>
+        <style>
+            {{style}}
+        </style>
+    </head>
+    <body>
+        <table border=1>
+            <tr>
+                <td>Command</td>
+                <td><b>{{script}}</b></td>
+            </tr>
+        </table>
+        <br/>
+        <br/>
+        <div class="ansi_terminal">{{script_output|safe}}</div>
+    </body>
+</html>

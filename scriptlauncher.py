@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from flask import Flask, request, Response
+from flask import Flask, request, Response, render_template
 from yamlns import namespace as ns
 from ooop import OOOP
 import functools
@@ -64,9 +64,7 @@ def index():
         for scriptname,script in scripts.iteritems()
         ]
 
-    return '\n'.join([header.format(style=''),'<lu>']+items+['</lu>',footer])
-
-
+    return render_template('index_template.html',items=scripts.iteritems())
 
 @app.route('/run/<scriptname>')
 @requires_auth
@@ -74,14 +72,8 @@ def script(scriptname):
     output=subprocess.check_output(
         scripts[scriptname].script,
         stderr=subprocess.STDOUT,
-        shell=True)
-    return '\n'.join([
-        header.format(style=deansi.styleSheet()),
-        '<div class="ansi_terminal">',
-        deansi.deansi(output),
-        '</div>',
-        footer,
-        ])
+        shell=True).decode('utf-8')
+    return render_template('cmd_template.html',script_name=scriptname,script=scripts[scriptname].script,script_output=deansi.deansi(output),style=deansi.styleSheet())
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rd'
 if __name__ == '__main__':

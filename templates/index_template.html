@@ -1,0 +1,14 @@
+<html>
+<head>
+<title>Lista de scripts</title>
+</head>
+<body>
+<h1>Scripts</h1>
+<lu>
+{% for scriptname,script in items %}
+    <li><a href="/run/{{scriptname}}">{{script.description}}</a></li>
+{% endfor %}
+</lu>
+</body>
+</html>
+
