@@ -9,18 +9,6 @@ app = Flask(__name__)
 
 scripts = ns.load('scripts.yaml')
 
-header = """\
-<html>
-<head>
-<title>Lista de scripts</title>
-<style>
-{style}
-</style>
-</head>
-<body>
-"""
-footer="</body></html>"
-
 def requires_auth(f):
     @functools.wraps(f)
     def decorated(*args, **kwd):
@@ -57,12 +45,6 @@ def check_auth(username, password):
 @app.route('/')
 @requires_auth
 def index():
-    items = [
-        '<h1>Scripts</h1>',
-        ] + [
-        '<li><a href="/run/{0}">{1}</a></li>'.format(scriptname,script.description)
-        for scriptname,script in scripts.iteritems()
-        ]
 
     return render_template('index_template.html',items=scripts.iteritems())
 
