@@ -1,3 +1,4 @@
+#!/usr/bin/env python2
 from flask import Flask
 from yamlns import namespace as ns
 import subprocess
@@ -48,4 +49,4 @@ def script(scriptname):
 
 if __name__ == '__main__':
     print '09'
-    app.run(debug=1)
+    app.run(debug=1,host='0.0.0.0')
