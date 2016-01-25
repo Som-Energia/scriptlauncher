@@ -63,28 +63,27 @@ def index():
             return redirect('/run/'+key+'/'+parameters) if parameters else redirect('/run/'+key)
     return render_template('index_template.html',items=scripts.iteritems(),forms=forms)
 
-@app.route('/run/<scriptname>')
-@requires_auth
-def script_without_parms(scriptname):
+def execute(scriptname,parms=""):
     output=subprocess.check_output(
-        scripts[scriptname].script,
+        scripts[scriptname].script+parms,
         stderr=subprocess.STDOUT,
         shell=True).decode('utf-8')
     return render_template('cmd_template.html',script_name=scriptname,script=scripts[scriptname].script,script_output=deansi.deansi(output),style=deansi.styleSheet())
 
+@app.route('/run/<scriptname>')
+@requires_auth
+def script_without_parms(scriptname):
+    if 'parameters' in scripts[scriptname]:
+        abort(401)
+    return execute(scriptname)
 @app.route('/run/<scriptname>/<parameters>')
 @requires_auth
 def script_with_parms(scriptname,parameters):
     param_list=parameters.split('&')
-    if len(param_list) != scripts[scriptname].parameters:
+    if ('parameters' in scripts[scriptname] and len(param_list) != scripts[scriptname].parameters) or 'parameters' not in scripts[scriptname]:
         abort(401)
-    param_spaced=parameters.replace('&',' ')
-    output=subprocess.check_output(
-        scripts[scriptname].script+' '+param_spaced,
-        stderr=subprocess.STDOUT,
-        shell=True).decode('utf-8')
-    return render_template('cmd_template.html',script_name=scriptname,script=scripts[scriptname].script,script_output=deansi.deansi(output),style=deansi.styleSheet())
-
+    param_spaced=' '+parameters.replace('&',' ')
+    return execute(scriptname,parms=param_spaced)
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rd'
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', processes=8)
