@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-from flask import Flask, request, Response, render_template
+from flask import Flask, request, Response, render_template, redirect, abort
+from wtforms import StringField,SubmitField,FieldList
+from wtforms.validators import DataRequired
+from flask_wtf import Form
 from yamlns import namespace as ns
 from ooop import OOOP
 import functools
@@ -8,6 +11,12 @@ import deansi
 app = Flask(__name__)
 
 scripts = ns.load('scripts.yaml')
+
+
+class ParameterForm(Form):
+    
+    parms = FieldList(StringField('Parameter'))
+    submit = SubmitField("Execute")
 
 def requires_auth(f):
     @functools.wraps(f)
@@ -42,17 +51,26 @@ def check_auth(username, password):
         return False
 
 
-@app.route('/')
+@app.route('/', methods=('GET', 'POST'))
 @requires_auth
 def index():
+    forms={}
+    for key in scripts.iterkeys():
+        forms[key]=ParameterForm(prefix=key)   
+        if request.method == "POST" and forms[key].submit.data:
+            parameters="&".join([a.data for a in forms[key].parms])
+            return redirect('/run/'+key+'/'+parameters)
+    return render_template('index_template.html',items=scripts.iteritems(),forms=forms)
 
-    return render_template('index_template.html',items=scripts.iteritems())
-
-@app.route('/run/<scriptname>')
+@app.route('/run/<scriptname>/<parameters>')
 @requires_auth
-def script(scriptname):
+def script_with_parms(scriptname,parameters):
+    param_list=parameters.split('&')
+    if len(param_list) != scripts[scriptname].parameters:
+        abort(401)
+    param_spaced=parameters.replace('&',' ')
     output=subprocess.check_output(
-        scripts[scriptname].script,
+        scripts[scriptname].script+' '+param_spaced,
         stderr=subprocess.STDOUT,
         shell=True).decode('utf-8')
     return render_template('cmd_template.html',script_name=scriptname,script=scripts[scriptname].script,script_output=deansi.deansi(output),style=deansi.styleSheet())
