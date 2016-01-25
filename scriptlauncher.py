@@ -17,7 +17,8 @@ class ParameterForm(Form):
     
     parms = FieldList(StringField('Parameter'))
     submit = SubmitField("Execute")
-
+    def validate(self):
+        return True
 def requires_auth(f):
     @functools.wraps(f)
     def decorated(*args, **kwd):
@@ -37,7 +38,6 @@ def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
-    #return username == 'admin' and password == 'secret'
 
     from config import Config
     cfg = Config(file('openerp.cfg'))
@@ -58,7 +58,7 @@ def index():
     forms={}
     for key in scripts.iterkeys():
         forms[key]=ParameterForm(prefix=key)   
-        if request.method == "POST" and forms[key].submit.data:
+        if forms[key].validate_on_submit():
             parameters="&".join([a.data for a in forms[key].parms])
             return redirect('/run/'+key+'/'+parameters) if parameters else redirect('/run/'+key)
     return render_template('index_template.html',items=scripts.iteritems(),forms=forms)
