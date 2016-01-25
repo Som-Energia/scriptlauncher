@@ -12,7 +12,6 @@
             {% for parm in range(0,script.parameters) %}
                 {{forms[scriptname].parms.append_entry()}}
             {% endfor %}
-            <!-- <input type="submit" name="{{scriptname}}" value="Execute"/>-->
         {% endif %}
         {{ forms[scriptname].submit }}
         </li>    

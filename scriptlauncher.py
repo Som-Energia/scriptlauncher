@@ -84,6 +84,9 @@ def script_with_parms(scriptname,parameters):
         abort(400)
     param_spaced=' '+parameters.replace('&',' ')
     return execute(scriptname,parms=param_spaced)
+@app.errorhandler(400)
+def badRequest(e):
+    return render_template('400.html')
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rd'
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', processes=8)
