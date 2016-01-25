@@ -58,7 +58,7 @@ def index():
     forms={}
     for key in scripts.iterkeys():
         forms[key]=ParameterForm(prefix=key)   
-        if forms[key].validate_on_submit():
+        if forms[key].validate_on_submit() and forms[key].submit.data:
             parameters="&".join([a.data for a in forms[key].parms])
             return redirect('/run/'+key+'/'+parameters) if parameters else redirect('/run/'+key)
     return render_template('index_template.html',items=scripts.iteritems(),forms=forms)
