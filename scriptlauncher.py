@@ -18,7 +18,8 @@ class ParameterForm(Form):
     parms = FieldList(StringField('Parameter'))
     submit = SubmitField("Execute")
     def validate(self):
-        return True
+        return all(val(parm.data) for parm,val in zip(parms,validations))]
+
 def requires_auth(f):
     @functools.wraps(f)
     def decorated(*args, **kwd):
@@ -58,6 +59,7 @@ def index():
     forms={}
     for key in scripts.iterkeys():
         forms[key]=ParameterForm(prefix=key)   
+        forms[key].validations=[eval('lambda parm:'+val_func) for val_func in scripts[key].parameters.itervalues()]
         if forms[key].validate_on_submit() and forms[key].submit.data:
             parameters="&".join([a.data for a in forms[key].parms])
             return redirect('/run/'+key+'/'+parameters) if parameters else redirect('/run/'+key)
@@ -80,7 +82,7 @@ def script_without_parms(scriptname):
 @requires_auth
 def script_with_parms(scriptname,parameters):
     param_list=parameters.split('&')
-    if ('parameters' in scripts[scriptname] and len(filter(bool,param_list)) != scripts[scriptname].parameters) or 'parameters' not in scripts[scriptname]:
+    if ('parameters' in scripts[scriptname] and len(filter(bool,param_list)) != len(scripts[scriptname].parameters)) or 'parameters' not in scripts[scriptname]:
         abort(400)
     param_spaced=' '+parameters.replace('&',' ')
     return execute(scriptname,parms=param_spaced)

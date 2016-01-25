@@ -5,18 +5,20 @@
 <body>
 <h1>Scripts</h1>
 <form method="POST" action="/">
-    <lu>
+    <ul>
     {% for scriptname,script in items %}
         <li>{{script.description}}</a>
         {% if 'parameters' in script %}
-            {% for parm in range(0,script.parameters) %}
-                {{forms[scriptname].parms.append_entry()}}
+            <ul>
+            {% for parm in script.parameters.iterkeys() %}
+                <li>{{parm}}{{forms[scriptname].parms.append_entry()}}</li>
             {% endfor %}
+            </ul>
         {% endif %}
-        {{ forms[scriptname].submit }}
         </li>    
+        {{ forms[scriptname].submit }}
     {% endfor %}
-    </lu>
+    </ul>
 </form>
 </body>
 </html>
