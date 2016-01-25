@@ -54,13 +54,23 @@ def check_auth(username, password):
 @app.route('/', methods=('GET', 'POST'))
 @requires_auth
 def index():
+    scripts = ns.load('scripts.yaml')
     forms={}
     for key in scripts.iterkeys():
         forms[key]=ParameterForm(prefix=key)   
         if request.method == "POST" and forms[key].submit.data:
             parameters="&".join([a.data for a in forms[key].parms])
-            return redirect('/run/'+key+'/'+parameters)
+            return redirect('/run/'+key+'/'+parameters) if parameters else redirect('/run/'+key)
     return render_template('index_template.html',items=scripts.iteritems(),forms=forms)
+
+@app.route('/run/<scriptname>')
+@requires_auth
+def script_without_parms(scriptname):
+    output=subprocess.check_output(
+        scripts[scriptname].script,
+        stderr=subprocess.STDOUT,
+        shell=True).decode('utf-8')
+    return render_template('cmd_template.html',script_name=scriptname,script=scripts[scriptname].script,script_output=deansi.deansi(output),style=deansi.styleSheet())
 
 @app.route('/run/<scriptname>/<parameters>')
 @requires_auth
