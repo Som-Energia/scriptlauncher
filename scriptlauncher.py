@@ -18,7 +18,7 @@ class ParameterForm(Form):
     parms = FieldList(StringField('Parameter'))
     submit = SubmitField("Execute")
     def validate(self):
-        return all(val(parm.data) for parm,val in zip(parms,validations))]
+        return all(val(parm.data) for parm,val in zip(self.parms,self.validations))
 
 def requires_auth(f):
     @functools.wraps(f)
@@ -59,7 +59,10 @@ def index():
     forms={}
     for key in scripts.iterkeys():
         forms[key]=ParameterForm(prefix=key)   
-        forms[key].validations=[eval('lambda parm:'+val_func) for val_func in scripts[key].parameters.itervalues()]
+        if 'parameters' in scripts[key]:
+            forms[key].validations=[eval('lambda parm: '+str(val_func)) for val_func in scripts[key].parameters.itervalues()]
+        else:
+            forms[key].validations=[]
         if forms[key].validate_on_submit() and forms[key].submit.data:
             parameters="&".join([a.data for a in forms[key].parms])
             return redirect('/run/'+key+'/'+parameters) if parameters else redirect('/run/'+key)
