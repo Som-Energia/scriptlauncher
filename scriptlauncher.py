@@ -18,7 +18,10 @@ class ParameterForm(Form):
     parms = FieldList(StringField('Parameter'))
     submit = SubmitField("Execute")
     def validate(self):
-        return all(val(parm.data) for parm,val in zip(self.parms,self.validations))
+        try:
+            return all(val(parm.data) for parm,val in zip(self.parms,self.validations))
+        except Exception:
+            return False
 
 def requires_auth(f):
     @functools.wraps(f)
