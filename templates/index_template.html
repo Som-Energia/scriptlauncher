@@ -1,25 +1,16 @@
+<!doctype html>
 <html>
 <head>
-<title>Lista de scripts</title>
+    <title>Lista de scripts</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<h1>Scripts</h1>
-<form method="POST" action="/">
+    <h1>Scripts</h1>
     <ul>
     {% for scriptname,script in items %}
-        <li>{{script.description}}</a>
-        {% if 'parameters' in script %}
-            <ul>
-            {% for parm in script.parameters.iterkeys() %}
-                <li>{{parm}}{{forms[scriptname].parms.append_entry()}}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        </li>    
-        {{ forms[scriptname].submit }}
+        <li><a href='/runner/{{scriptname}}'>{{script.description}}</a></li>
     {% endfor %}
     </ul>
-</form>
 </body>
 </html>
 

@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <title>Ejecutando {{description}}</title>
+    <style>
+        {{style}}
+        .ansi_terminal {
+            border: 2pt #489 solid;
+            padding: 2em;
+        }
+        .commandline {
+            padding: 1ex;
+            background: #DDD;
+        }
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>{{description}}</h1>
+    <form name="runner" id="runner">
+        <input type="submit" value="Ejecutar"/>
+    </form>
+        
+    <div class="commandline"><tt>{{script}}</tt></div>
+    <div id="result" class="ansi_terminal"></div>
+</body>
+<script type="text/javascript">
+    $("#runner").submit(function(e) {
+        $.ajax({
+             url: "/run/{{name}}",
+             method: "POST",
+             success: function(data) {
+                  $("#result").html(data);
+                  },
+             });
+        e.preventDefault();
+        });
+
+</script>
+</html>
+
