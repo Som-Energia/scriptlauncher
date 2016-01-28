@@ -35,6 +35,10 @@ cierremejorado:
   script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio7_tancament_millorat.py
   description: Script MEJORADO que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.
 
-
-
+fixrefundinvoice:
+  script: python $SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py -i {invoice}
+  description: corregir factura rectificativa
+  parameters:
+    invoice:
+      description: Invoice number
 
