@@ -14,26 +14,6 @@ app = Flask(__name__)
 scripts = ns.load('scripts.yaml')
 import configdb
 
-"""
-class ParameterForm(Form):
-
-    parms = FieldList(StringField('Parameter'))
-    submit = SubmitField("Execute")
-
-    def validate(self):
-        validation=True
-        for parm,(parmname,val) in zip(self.parms,self.validations.iteritems()):
-            try:
-                if not val(parm.data):
-                    print "validate: "+parm
-                    self.errors[parm]='Invalid parameter {} '.format(parmname)
-                    validation=False
-            except Exception:
-                print(repr(parm))
-                self.errors[parm]='Invalid parameter {} '.format(parmname)
-                validation=False
-        return validation
-"""
 
 def requires_auth(f):
     @functools.wraps(f)
@@ -115,20 +95,6 @@ def script_without_parms(scriptname):
     global scripts
     scripts = ns.load('scripts.yaml')
     return execute(scriptname)
-
-
-@app.route('/run/<scriptname>/<parameters>')
-@requires_auth
-def script_with_parms(scriptname,parameters):
-    param_list=parameters.split('&')
-    if (
-            ('parameters' in scripts[scriptname]and
-            len(filter(bool,param_list)) != len(scripts[scriptname].parameters))
-            or 'parameters' not in scripts[scriptname]
-            ):
-        abort(400)
-    param_spaced=' '+parameters.replace('&',' ')
-    return execute(scriptname,parms=param_spaced)
 
 
 @app.errorhandler(400)
