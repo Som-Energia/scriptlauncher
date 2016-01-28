@@ -1,0 +1,6 @@
+- Escaping parameters to improve security.
+- /run returns a json object with ret code and commandline besides the output
+- Add script sections.
+- Add loading... feedback
+- Disable Execute button after press
+- Style parameter fields
