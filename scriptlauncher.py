@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 from flask import Flask, request, Response, render_template, redirect, abort, flash, request
-from wtforms import StringField,SubmitField,FieldList
-from wtforms.validators import DataRequired
-from flask_wtf import Form
+#from wtforms import StringField,SubmitField,FieldList
+#from wtforms.validators import DataRequired
+#from flask_wtf import Form
 from yamlns import namespace as ns
 from ooop import OOOP
 from collections import OrderedDict
@@ -12,9 +12,9 @@ import deansi
 app = Flask(__name__)
 
 scripts = ns.load('scripts.yaml')
-cfg = ns.load('openerp.cfg')
+import configdb
 
-
+"""
 class ParameterForm(Form):
 
     parms = FieldList(StringField('Parameter'))
@@ -33,6 +33,7 @@ class ParameterForm(Form):
                 self.errors[parm]='Invalid parameter {} '.format(parmname)
                 validation=False
         return validation
+"""
 
 def requires_auth(f):
     @functools.wraps(f)
@@ -53,10 +54,10 @@ def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
-    cfg.user = username
-    cfg.pwd = password
+    configdb.ooop['user'] = username
+    configdb.ooop['pwd'] = password
     try:
-        O = OOOP(**cfg)
+        O = OOOP(**configdb.ooop)
         return True
     except:
         print "Unable to connect to ERP"
@@ -99,7 +100,12 @@ def execute(scriptname,parms=""):
         stderr=subprocess.STDOUT,
         shell=True).decode('utf-8')
     return deansi.deansi(output)
-    return render_template('cmd_template.html',script_name=scriptname,script=scripts[scriptname].script,script_output=deansi.deansi(output),style=deansi.styleSheet())
+    return render_template('cmd_template.html',
+        script_name=scriptname,
+        script=scripts[scriptname].script,
+        script_output=deansi.deansi(output),
+        style=deansi.styleSheet(),
+        )
 
 
 @app.route('/run/<scriptname>')
@@ -116,7 +122,11 @@ def script_without_parms(scriptname):
 @requires_auth
 def script_with_parms(scriptname,parameters):
     param_list=parameters.split('&')
-    if ('parameters' in scripts[scriptname] and len(filter(bool,param_list)) != len(scripts[scriptname].parameters)) or 'parameters' not in scripts[scriptname]:
+    if (
+            ('parameters' in scripts[scriptname]and
+            len(filter(bool,param_list)) != len(scripts[scriptname].parameters))
+            or 'parameters' not in scripts[scriptname]
+            ):
         abort(400)
     param_spaced=' '+parameters.replace('&',' ')
     return execute(scriptname,parms=param_spaced)
