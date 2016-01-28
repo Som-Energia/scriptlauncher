@@ -22,27 +22,36 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>{{description}}</h1>
+    <h1>{{name}}: {{description}}</h1>
     <form name="runner" id="runner">
+        {% if parameters is defined %}
+            {% for paramname,parameter in parameters.items() %}
+                <div><label for="{{paramname}}">{{parameter.description}}</label><input name="{{paramname}}"/></div>
+            {% endfor %}
+        {% endif %}
         <input type="submit" value="Ejecutar"/>
     </form>
         
     <div class="commandline"><tt>{{script}}</tt></div>
     <div id="result" class="ansi_terminal"></div>
     <div id="index-link" class="links"><a href="/">Index</a></div>
-</body>
 <script type="text/javascript">
+$(document).ready(function(){
+    console.log("defining");
     $("#runner").submit(function(e) {
-        $.ajax({
-             url: "/run/{{name}}",
-             method: "POST",
-             success: function(data) {
-                  $("#result").html(data);
-                  },
-             });
+        console.log("Submiting");
+        $.post(
+             "/run/{{name}}",
+             $(this).serialize(),
+             function(data) {
+                 console.log("Success");
+                 $("#result").html(data);
+                 }
+             );
         e.preventDefault();
-        });
-
+    });
+});
 </script>
+</body>
 </html>
 

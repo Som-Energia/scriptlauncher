@@ -76,7 +76,8 @@ def index():
     global scripts
     scripts = ns.load('scripts.yaml')
     forms={}
-    return render_template('index_template.html',items=scripts.iteritems())
+    return render_template('index_template.html',
+        items=scripts.iteritems())
 
 
 @app.route('/runner/<cmd>')
@@ -92,29 +93,27 @@ def runner(cmd):
         **script
         )
 
-def execute(scriptname,parms=""):
+def execute(scriptname):
     import os
-    os.environ['SOME_SRC']=cfg.prefix
-    output=subprocess.check_output(
-        scripts[scriptname].script+parms,
-        stderr=subprocess.STDOUT,
-        shell=True).decode('utf-8')
+    os.environ['SOME_SRC']=configdb.prefix
+    parameters = ns(request.form.items())
+    commandline = scripts[scriptname].script.format(**parameters)
+    print commandline
+    try:
+        output=subprocess.check_output(
+            commandline,
+            stderr=subprocess.STDOUT,
+            shell=True).decode('utf-8')
+    except subprocess.CalledProcessError as e:
+        output=e.output
     return deansi.deansi(output)
-    return render_template('cmd_template.html',
-        script_name=scriptname,
-        script=scripts[scriptname].script,
-        script_output=deansi.deansi(output),
-        style=deansi.styleSheet(),
-        )
 
 
-@app.route('/run/<scriptname>')
+@app.route('/run/<scriptname>', methods=['POST','GET'])
 @requires_auth
 def script_without_parms(scriptname):
     global scripts
     scripts = ns.load('scripts.yaml')
-    if 'parameters' in scripts[scriptname]:
-        abort(401)
     return execute(scriptname)
 
 
