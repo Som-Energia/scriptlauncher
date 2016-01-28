@@ -1,0 +1,40 @@
+quadrecontrol:
+  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
+  description: Validación de cuadro de control
+
+errorsprincipals:
+  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio0_errors_principal.py
+  description: Validación de errores principales
+
+validacionbajas:
+  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio1_baixes_2.py
+  description: Validación de bajas
+
+polizasbajas:  
+  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio2_eliminar_polisses_baixa.py
+  description: Eliminar bajas de polizas
+  
+sobreestimaciones:
+  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio3_sobre_estimacions.py
+  description: Sobreestimaciones
+
+
+sinlecturamaximetro:
+  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio4_sense_lectura_maximetre.py
+  description: Sin lectura maxímetro
+
+validacionincompleta:
+  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio5_incompleta.py
+  description: Validación incompleta
+
+lecturacierre:
+  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio6_lectura_tancament.py
+  description: Script que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.
+
+cierremejorado:
+  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio7_tancament_millorat.py
+  description: Script MEJORADO que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.
+
+
+
+

@@ -5,12 +5,17 @@
     <style>
         {{style}}
         .ansi_terminal {
-            border: 2pt #489 solid;
             padding: 2em;
+            border: 2pt #489 solid;
+            overflow: auto;
+            overflow-y: hidden;
         }
         .commandline {
             padding: 1ex;
             background: #DDD;
+        }
+        .links {
+            padding: 1ex;
         }
     </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
@@ -24,6 +29,7 @@
         
     <div class="commandline"><tt>{{script}}</tt></div>
     <div id="result" class="ansi_terminal"></div>
+    <div id="index-link" class="links"><a href="/">Index</a></div>
 </body>
 <script type="text/javascript">
     $("#runner").submit(function(e) {

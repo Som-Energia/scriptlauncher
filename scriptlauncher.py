@@ -12,6 +12,7 @@ import deansi
 app = Flask(__name__)
 
 scripts = ns.load('scripts.yaml')
+cfg = ns.load('openerp.cfg')
 
 
 class ParameterForm(Form):
@@ -52,9 +53,6 @@ def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
-
-    from config import Config
-    cfg = Config(file('openerp.cfg'))
     cfg.user = username
     cfg.pwd = password
     try:
@@ -74,6 +72,7 @@ def flash_errors(form):
 @app.route('/', methods=('GET', 'POST'))
 @requires_auth
 def index():
+    global scripts
     scripts = ns.load('scripts.yaml')
     forms={}
     return render_template('index_template.html',items=scripts.iteritems())
@@ -82,6 +81,8 @@ def index():
 @app.route('/runner/<cmd>')
 @requires_auth
 def runner(cmd):
+    global scripts
+    scripts = ns.load('scripts.yaml')
     script=scripts[cmd]
     return render_template(
         'runner_template.html',
@@ -91,6 +92,8 @@ def runner(cmd):
         )
 
 def execute(scriptname,parms=""):
+    import os
+    os.environ['SOME_SRC']=cfg.prefix
     output=subprocess.check_output(
         scripts[scriptname].script+parms,
         stderr=subprocess.STDOUT,
@@ -102,8 +105,10 @@ def execute(scriptname,parms=""):
 @app.route('/run/<scriptname>')
 @requires_auth
 def script_without_parms(scriptname):
+    global scripts
+    scripts = ns.load('scripts.yaml')
     if 'parameters' in scripts[scriptname]:
-        abort(400)
+        abort(401)
     return execute(scriptname)
 
 
