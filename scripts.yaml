@@ -40,6 +40,6 @@ fixrefundinvoice:
   description: corregir factura rectificativa
   parameters:
     invoice:
-      code: -i {}
+      code: -i
       description: Invoice number
 

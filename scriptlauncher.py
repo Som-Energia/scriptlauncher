@@ -79,17 +79,16 @@ def execute(scriptname):
     os.environ['SOME_SRC']=configdb.prefix
     parameters = ns(request.form.items())
     commandline = scripts[scriptname].script.format(**parameters)
+    params_list = []
     print commandline
     for parm in parameters:
-        parameters[parm] = ' '.join(list(shlex.shlex(parameters[parm],posix=True)))
-    params_list = [scripts[scriptname]['parameters'][parm]['code'].format(parameters[parm]) for parm in scripts[scriptname].parameters]
+        params_list.append(scripts[scriptname]['parameters'][parm]['code'])
+        params_list.append(' '.join(list(shlex.shlex(parameters[parm],posix=True))))
+
     commandline = scripts[scriptname].script.replace('$SOME_SRC',configdb.prefix)
- 
+    print [commandline]+params_list
     try:
-         cutput=subprocess.check_output(
-            [commandline]+params_list,
-            stderr=subprocess.STDOUT,
-            ).decode('utf-8')
+        output=subprocess.check_output([commandline]+params_list,stderr=subprocess.STDOUT).decode('utf-8')
     except subprocess.CalledProcessError as e:
         output=e.output
     return deansi.deansi(output)
