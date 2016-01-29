@@ -9,6 +9,7 @@ from collections import OrderedDict
 import functools
 import subprocess
 import deansi
+import shlex
 app = Flask(__name__)
 
 scripts = ns.load('scripts.yaml')
@@ -79,11 +80,16 @@ def execute(scriptname):
     parameters = ns(request.form.items())
     commandline = scripts[scriptname].script.format(**parameters)
     print commandline
+    for parm in parameters:
+        parameters[parm] = ' '.join(list(shlex.shlex(parameters[parm],posix=True)))
+    params_list = [scripts[scriptname]['parameters'][parm]['code'].format(parameters[parm]) for parm in scripts[scriptname].parameters]
+    commandline = scripts[scriptname].script.replace('$SOME_SRC',configdb.prefix)
+ 
     try:
-        output=subprocess.check_output(
-            commandline,
+         cutput=subprocess.check_output(
+            [commandline]+params_list,
             stderr=subprocess.STDOUT,
-            shell=True).decode('utf-8')
+            ).decode('utf-8')
     except subprocess.CalledProcessError as e:
         output=e.output
     return deansi.deansi(output)
