@@ -1,6 +1,6 @@
-- Escaping parameters to improve security.
+- <del>Escaping parameters to improve security.</del>
 - /run returns a json object with ret code and commandline besides the output
 - Add script sections.
-- Add loading... feedback
-- Disable Execute button after press
+- <del>Add loading... feedback</del>
+- <del>Disable Execute button after press</del>
 - Style parameter fields
