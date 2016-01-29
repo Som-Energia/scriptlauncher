@@ -17,8 +17,43 @@
         .links {
             padding: 1ex;
         }
+        .loading { margin: auto; }
+
+        .loading span {
+          line-height: 32px;
+          margin-left: 12px;
+          font-size: 16px;
+          vertical-align: middle;
+        }
+
+        .loading img { vertical-align: middle; }
+
+        .loading_wrp {
+          background-color: #FFF;
+          display: block;
+          height: 100%;
+          left: 0;
+          opacity: 0.5;
+          filter: alpha(opacity=50);
+          position: absolute;
+          top: 0;
+          width: 100%;
+          z-index: 1020;
+        }
+
+        .loading_wrp .x16 span {
+          line-height: 16px;
+          font-size: 12px;
+          margin-left: 6px;
+        }
+
+        .loading_wrp .x32 img {
+          width: 32px;
+          height: 32px;
+        }
     </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <script src="{{url_for('static', filename='jquery-loader.js')}}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -40,12 +75,16 @@ $(document).ready(function(){
     console.log("defining");
     $("#runner").submit(function(e) {
         console.log("Submiting");
+        $("#runner").loader({
+            imgUrl: "{{ url_for('static', filename='loading32x32.gif') }}"
+        })
         $.post(
              "/run/{{name}}",
              $(this).serialize(),
              function(data) {
                  console.log("Success");
                  $("#result").html(data);
+                 $.loader.close();
                  }
              );
         e.preventDefault();
