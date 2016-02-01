@@ -57,8 +57,12 @@ def index():
     global scripts
     scripts = ns.load('scripts.yaml')
     forms={}
+    tags = set()
+    for script in scripts.itervalues():
+        for tag in script.tags:
+            tags.add(tag)
     return render_template('index_template.html',
-        items=scripts.iteritems())
+        items=scripts.items(),tags=tags)
 
 
 @app.route('/runner/<cmd>')

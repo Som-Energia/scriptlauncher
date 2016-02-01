@@ -3,14 +3,33 @@
 <head>
     <title>Lista de scripts</title>
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
 </head>
 <body>
     <h1>Scripts</h1>
     <ul>
-    {% for scriptname,script in items %}
-        <li><a href='/runner/{{scriptname}}'>{{script.description}}</a></li>
-    {% endfor %}
+        {% for tag in tags %}
+            <p><a id="{{tag+'-link'}}" href="#">{{tag}}</a></p>
+            <div id="{{ tag }}" style="display:none">
+                {% for scriptname,script in items if tag in script.tags %}
+                    <li><a href='/runner/{{scriptname}}'>{{script.description}}</a></li>
+                {% endfor %}
+            </div>
+        {% endfor %}
     </ul>
+<script>
+    {% for tag in tags %}
+        $("#{{tag}}-link").click(function(){
+            if ($("#{{tag}}").css("display")=="none"){
+                $("#{{tag}}").show("slow");
+            }
+            else {
+                $("#{{tag}}").hide("slow");
+            }
+        }
+        );
+    {% endfor %}
+</script>
 </body>
 </html>
 
