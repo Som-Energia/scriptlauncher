@@ -63,3 +63,8 @@ fixrefundinvoice:
       code: -i
       description: Invoice number
 
+senselectureanterior:
+  script: $SOME_SRC/invoice-janitor/measurefixing/Validacio8_sense_lectura_anterior.py
+  description: Sin lectura anterior
+  tags:
+    - measurefixing
