@@ -1,54 +1,54 @@
 quadrecontrol:
-  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
+  script: $SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
   description: Validación de cuadro de control
   tags:
     - measurefixing
 
 errorsprincipals:
-  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio0_errors_principal.py
+  script: $SOME_SRC/invoice-janitor/measurefixing/Validacio0_errors_principal.py
   description: Validación de errores principales
   tags:
     - measurefixing
 
 validacionbajas:
-  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio1_baixes_2.py
+  script: $SOME_SRC/invoice-janitor/measurefixing/Validacio1_baixes_2.py
   description: Validación de bajas
   tags:
     - measurefixing
 
 polizasbajas:  
-  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio2_eliminar_polisses_baixa.py
+  script: $SOME_SRC/invoice-janitor/measurefixing/Validacio2_eliminar_polisses_baixa.py
   description: Eliminar bajas de polizas
   tags:
     - measurefixing
-  
+
 sobreestimaciones:
-  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio3_sobre_estimacions.py
+  script: $SOME_SRC/invoice-janitor/measurefixing/Validacio3_sobre_estimacions.py
   description: Sobreestimaciones
   tags:
     - measurefixing
 
 
 sinlecturamaximetro:
-  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio4_sense_lectura_maximetre.py
+  script: $SOME_SRC/invoice-janitor/measurefixing/Validacio4_sense_lectura_maximetre.py
   description: Sin lectura maxímetro
   tags:
     - measurefixing
 
 validacionincompleta:
-  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio5_incompleta.py
+  script: $SOME_SRC/invoice-janitor/measurefixing/Validacio5_incompleta.py
   description: Validación incompleta
   tags:
     - measurefixing
 
 lecturacierre:
-  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio6_lectura_tancament.py
+  script: $SOME_SRC/invoice-janitor/measurefixing/Validacio6_lectura_tancament.py
   description: Script que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.
   tags:
     - measurefixing
 
 cierremejorado:
-  script: python $SOME_SRC/invoice-janitor/measurefixing/Validacio7_tancament_millorat.py
+  script: $SOME_SRC/invoice-janitor/measurefixing/Validacio7_tancament_millorat.py
   description: Script MEJORADO que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.
   tags:
     - measurefixing
