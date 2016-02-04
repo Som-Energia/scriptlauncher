@@ -4,3 +4,4 @@
 - <del>Add loading... feedback</del>
 - <del>Disable Execute button after press</del>
 - Style parameter fields
+- File upload and pass it as a parameter to scripts
