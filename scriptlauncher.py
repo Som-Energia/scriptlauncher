@@ -10,6 +10,9 @@ import functools
 import subprocess
 import deansi
 import shlex
+import json
+import bitstring
+
 app = Flask(__name__)
 
 scripts = ns.load('scripts.yaml')
@@ -91,11 +94,13 @@ def execute(scriptname):
 
     commandline = scripts[scriptname].script.replace('$SOME_SRC',configdb.prefix)
     print [commandline]+params_list
+    return_code=0
     try:
         output=subprocess.check_output([commandline]+params_list,stderr=subprocess.STDOUT).decode('utf-8')
     except subprocess.CalledProcessError as e:
         output=e.output
-    return deansi.deansi(output)
+        return_code=bitstring.Bits(uint=e.returncode, length=8).unpack('int')[0]
+    return '{"return_code":'+json.dumps(return_code)+', "response": '+json.dumps(deansi.deansi(output))+'}'
 
 
 @app.route('/run/<scriptname>', methods=['POST','GET'])

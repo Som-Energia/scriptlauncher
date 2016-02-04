@@ -17,6 +17,9 @@
         .links {
             padding: 1ex;
         }
+        .return_code {
+            padding: 1ex;
+        }
         .loading { margin: auto; }
 
         .loading span {
@@ -70,6 +73,7 @@
     <div class="commandline"><tt>{{script}}</tt></div>
     <div id="result" class="ansi_terminal"></div>
     <div id="index-link" class="links"><a href="/">Index</a></div>
+    Return code:<div id="return-code" class="return_code"></div>
 <script type="text/javascript">
 $(document).ready(function(){
     console.log("defining");
@@ -83,7 +87,9 @@ $(document).ready(function(){
              $(this).serialize(),
              function(data) {
                  console.log("Success");
-                 $("#result").html(data);
+                 var response= jQuery.parseJSON(data);
+                 $("#result").html(response.response);
+                 $("#return-code").html(response.return_code);
                  $.loader.close();
                  }
              );
