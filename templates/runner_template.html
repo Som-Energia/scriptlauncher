@@ -81,7 +81,7 @@ $(document).ready(function(){
         console.log("Submiting");
         $("#runner").loader({
             imgUrl: "{{ url_for('static', filename='loading32x32.gif') }}"
-        })
+        });
         $.post(
              "/run/{{name}}",
              $(this).serialize(),
