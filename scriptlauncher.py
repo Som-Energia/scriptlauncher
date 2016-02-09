@@ -1,8 +1,5 @@
 #!/usr/bin/env python
-from flask import Flask, request, Response, render_template, redirect, abort, flash, request
-#from wtforms import StringField,SubmitField,FieldList
-#from wtforms.validators import DataRequired
-#from flask_wtf import Form
+from flask import Flask, request, Response, render_template, redirect, abort, flash, request,jsonify, session
 from yamlns import namespace as ns
 from ooop import OOOP
 from collections import OrderedDict
@@ -12,9 +9,15 @@ import deansi
 import shlex
 import json
 import bitstring
+import os
+from datetime import datetime
 
 app = Flask(__name__)
+app.config.from_object(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads'
 
+
+filename=''
 scripts = ns.load('scripts.yaml')
 import configdb
 
@@ -66,7 +69,16 @@ def index():
             tags.add(tag)
     return render_template('index_template.html',
         items=scripts.items(),tags=tags)
-
+@app.route('/upload', methods=('GET','POST'))
+@requires_auth
+def upload():
+    filename=session['filename']
+    if request.method == 'POST':
+        file = request.files['file']
+        if file:
+            filename_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filename_path)
+            return jsonify({"success":True})
 
 @app.route('/runner/<cmd>')
 @requires_auth
@@ -74,6 +86,8 @@ def runner(cmd):
     global scripts
     scripts = ns.load('scripts.yaml')
     script=scripts[cmd]
+    if 'fileparameter' in script:
+        session['filename']=scripts[cmd]['fileparameter']['name']
     return render_template(
         'runner_template.html',
         name=cmd,
@@ -87,13 +101,16 @@ def execute(scriptname):
     parameters = ns(request.form.items())
     commandline = scripts[scriptname].script.format(**parameters)
     params_list = []
-    print commandline
-    for parm in parameters:
-        params_list.append(scripts[scriptname]['parameters'][parm]['code'])
-        params_list.append(' '.join(list(shlex.shlex(parameters[parm],posix=True))))
+    if 'fileparameter' in scripts[scriptname]:
+        if scripts[scriptname]['fileparameter']['code']:
+            params_list.append(scripts[scriptname]['fileparameter']['code'])
+        params_list.append(os.path.join(app.config['UPLOAD_FOLDER'],session['filename']))
+    if 'parameters' in scripts[scriptname]:
+        for parm in parameters:
+            params_list.append(scripts[scriptname]['parameters'][parm]['code'])
+            params_list.append(' '.join(list(shlex.shlex(parameters[parm],posix=True))))
 
     commandline = scripts[scriptname].script.replace('$SOME_SRC',configdb.prefix)
-    print [commandline]+params_list
     return_code=0
     try:
         output=subprocess.check_output([commandline]+params_list,stderr=subprocess.STDOUT).decode('utf-8')

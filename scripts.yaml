@@ -53,6 +53,16 @@ cierremejorado:
   tags:
     - measurefixing
 
+cupstoemail:
+  script: $SOME_SRC/cups2email/cups2email_lang.py
+  description: Email validación de instalación desde CUPS en excel
+  tags:
+    - massivemailing
+  fileparameter:
+    code:
+    name: test.xlsx
+    description: Excel con los cups
+
 fixrefundinvoice:
   script: $SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
   description: corregir factura rectificativa

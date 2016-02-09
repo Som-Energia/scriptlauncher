@@ -54,14 +54,20 @@
           width: 32px;
           height: 32px;
         }
+
     </style>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="{{url_for('static', filename='jquery.filedrop.js')}}"></script>
+    <script src="{{url_for('static', filename='upload.js')}}"></script>
     <script src="{{url_for('static', filename='jquery-loader.js')}}"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h1>{{name}}: {{description}}</h1>
     <form name="runner" id="runner">
+        {% if fileparameter is defined %}
+            <input type="hidden" name="filename" value="{{fileparameter.name}}" ></input>
+        {% endif %}
         {% if parameters is defined %}
             {% for paramname,parameter in parameters.items() %}
                 <div><label for="{{paramname}}">{{parameter.description}}</label><input name="{{paramname}}"/></div>
@@ -69,7 +75,11 @@
         {% endif %}
         <input type="submit" value="Ejecutar"/>
     </form>
-        
+    {% if fileparameter is defined %}
+        <div id="dropbox">
+            <span class="message">Drop here file to upload.</span>
+        </div>
+    {% endif %}
     <div class="commandline"><tt>{{script}}</tt></div>
     <div id="result" class="ansi_terminal"></div>
     <div id="index-link" class="links"><a href="/">Index</a></div>
