@@ -106,7 +106,8 @@ def execute(scriptname):
         params_list.append(os.path.join(configdb.upload_folder,session['filename']))
     if 'parameters' in scripts[scriptname]:
         for parm in parameters:
-            params_list.append(scripts[scriptname]['parameters'][parm]['code'])
+            if scripts[scriptname]['parameters'][parm]['code']:
+                params_list.append(scripts[scriptname]['parameters'][parm]['code'])
             params_list.append(' '.join(list(shlex.shlex(parameters[parm],posix=True))))
 
     commandline = scripts[scriptname].script.replace('$SOME_SRC',configdb.prefix)
