@@ -14,7 +14,6 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
 
 
 filename=''
@@ -76,7 +75,7 @@ def upload():
     if request.method == 'POST':
         file = request.files['file']
         if file:
-            filename_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            filename_path = os.path.join(configdb.upload_folder, filename)
             file.save(filename_path)
             return jsonify({"success":True})
 
@@ -104,7 +103,7 @@ def execute(scriptname):
     if 'fileparameter' in scripts[scriptname]:
         if scripts[scriptname]['fileparameter']['code']:
             params_list.append(scripts[scriptname]['fileparameter']['code'])
-        params_list.append(os.path.join(app.config['UPLOAD_FOLDER'],session['filename']))
+        params_list.append(os.path.join(configdb.upload_folder,session['filename']))
     if 'parameters' in scripts[scriptname]:
         for parm in parameters:
             params_list.append(scripts[scriptname]['parameters'][parm]['code'])

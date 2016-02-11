@@ -77,7 +77,7 @@
     </form>
     {% if fileparameter is defined %}
         <div id="dropbox">
-            <span class="message">Drop here file to upload.</span>
+            <span class="message">Arrastra aquí el <b>{{fileparameter.description}}</b></span>
         </div>
     {% endif %}
     <div class="commandline"><tt>{{script}}</tt></div>

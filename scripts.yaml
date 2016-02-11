@@ -53,9 +53,19 @@ cierremejorado:
   tags:
     - measurefixing
 
-cupstoemail:
-  script: $SOME_SRC/cups2email/cups2email_lang.py
+cupstoemaila:
+  script: $SOME_SRC/cups2emaila/cups2email_lang_a.py
   description: Email validación de instalación desde CUPS en excel
+  tags:
+    - massivemailing
+  fileparameter:
+    code:
+    name: test.xlsx
+    description: Excel con los cups
+
+cupstoemailb:
+  script: $SOME_SRC/cups2emailb/cups2email_lang_b.py
+  description: Email petición documentación desde CUPS en excel
   tags:
     - massivemailing
   fileparameter:
