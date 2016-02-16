@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+    <title>Ejecutando Working test</title>
+    <style>
+        .ansi_terminal { white-space: pre; font-family: monospace; }
+.ansi_black { color: black; }
+.ansi_red { color: darkred; }
+.ansi_green { color: darkgreen; }
+.ansi_yellow { color: orange; }
+.ansi_blue { color: darkblue; }
+.ansi_magenta { color: purple; }
+.ansi_cyan { color: darkcyan; }
+.ansi_white { color: lightgray; }
+.ansi_bright.ansi_black { color: gray; }
+.ansi_bright.ansi_red { color: red; }
+.ansi_bright.ansi_green { color: green; }
+.ansi_bright.ansi_yellow { color: yellow; }
+.ansi_bright.ansi_blue { color: blue; }
+.ansi_bright.ansi_magenta { color: magenta; }
+.ansi_bright.ansi_cyan { color: cyan; }
+.ansi_bright.ansi_white { color: white; }
+.ansi_bgblack { background-color: black; }
+.ansi_bgred { background-color: red; }
+.ansi_bggreen { background-color: green; }
+.ansi_bgyellow { background-color: yellow; }
+.ansi_bgblue { background-color: blue; }
+.ansi_bgmagenta { background-color: magenta; }
+.ansi_bgcyan { background-color: cyan; }
+.ansi_bgwhite { background-color: white; }
+.ansi_bright { font-weight: bold; }
+.ansi_faint { opacity: .5; }
+.ansi_italic { font-style: italic; }
+.ansi_underscore { text-decoration: underline; }
+.ansi_blink { text-decoration: blink; }
+.ansi_reverse { border: 1pt solid; }
+.ansi_hide { opacity: 0; }
+.ansi_strike { text-decoration: line-through; }
+        .ansi_terminal {
+            padding: 2em;
+            border: 2pt #489 solid;
+            overflow: auto;
+            overflow-y: hidden;
+        }
+        .commandline {
+            padding: 1ex;
+            background: #DDD;
+        }
+        .links {
+            padding: 1ex;
+        }
+        .return_code {
+            padding: 1ex;
+        }
+        .param_name {
+            padding: 1ex;
+        }
+        .loading { margin: auto; }
+
+        .loading span {
+          line-height: 32px;
+          margin-left: 12px;
+          font-size: 16px;
+          vertical-align: middle;
+        }
+
+        .loading img { vertical-align: middle; }
+
+        .loading_wrp {
+          background-color: #FFF;
+          display: block;
+          height: 100%;
+          left: 0;
+          opacity: 0.5;
+          filter: alpha(opacity=50);
+          position: absolute;
+          top: 0;
+          width: 100%;
+          z-index: 1020;
+        }
+
+        .loading_wrp .x16 span {
+          line-height: 16px;
+          font-size: 12px;
+          margin-left: 6px;
+        }
+
+        .loading_wrp .x32 img {
+          width: 32px;
+          height: 32px;
+        }
+
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <script src="/static/jquery.filedrop.js"></script>
+    <script src="/static/upload.js"></script>
+    <script src="/static/jquery-loader.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <h1>test</h1>
+    <h2>Working test</h2>
+    <form name="runner" id="runner">
+        
+        
+        <input type="submit" value="Ejecutar"/>
+    </form>
+    
+    <div class="commandline"><tt>$SOME_SRC/scriptlauncher/test.py</tt></div>
+    <div id="result" class="ansi_terminal"></div>
+    <div id="index-link" class="links"><a href="/">Index</a></div>
+    Return code:<div id="return-code" class="return_code"></div>
+<script type="text/javascript">
+$(document).ready(function(){
+    console.log("defining");
+    $("#runner").submit(function(e) {
+        console.log("Submiting");
+        $("#result").css("border-color","#489");
+        $("#runner").loader({
+            imgUrl: "/static/loading32x32.gif"
+        });
+        $.post(
+             "/run/test",
+             $(this).serialize(),
+             function(data) {
+                 console.log("Success");
+                 var response= jQuery.parseJSON(data);
+                 $("#result").html(response.response);
+                 $("#return-code").html(response.return_code);
+                 if (response.return_code<0) {
+                     $("#result").css("border-color","#C80000");
+                 }
+                 $.loader.close();
+                 }
+             );
+        e.preventDefault();
+    });
+});
+</script>
+</body>
+</html>

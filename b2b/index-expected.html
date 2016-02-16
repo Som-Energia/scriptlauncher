@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+    <title>Lista de scripts</title>
+    <link rel=stylesheet type=text/css href="/static/style.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+</head>
+<body>
+    <h1>Scripts</h1>
+    <ul>
+        
+            <p><a id="measurefixing-link" href="#">measurefixing</a></p>
+            <div id="measurefixing" style="display:none">
+                
+                    <li><a href='/runner/quadrecontrol'>Validación de cuadro de control</a></li>
+                
+                    <li><a href='/runner/errorsprincipals'>Validación de errores principales</a></li>
+                
+                    <li><a href='/runner/validacionbajas'>Validación de bajas</a></li>
+                
+                    <li><a href='/runner/polizasbajas'>Eliminar bajas de polizas</a></li>
+                
+                    <li><a href='/runner/sobreestimaciones'>Sobreestimaciones</a></li>
+                
+                    <li><a href='/runner/sinlecturamaximetro'>Sin lectura maxímetro</a></li>
+                
+                    <li><a href='/runner/validacionincompleta'>Validación incompleta</a></li>
+                
+                    <li><a href='/runner/lecturacierre'>Script que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.</a></li>
+                
+                    <li><a href='/runner/cierremejorado'>Script MEJORADO que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.</a></li>
+                
+                    <li><a href='/runner/senselectureanterior'>Sin lectura anterior</a></li>
+                
+            </div>
+        
+            <p><a id="invoicefixing-link" href="#">invoicefixing</a></p>
+            <div id="invoicefixing" style="display:none">
+                
+                    <li><a href='/runner/fixrefundinvoice'>corregir factura rectificativa</a></li>
+                
+            </div>
+        
+            <p><a id="massivemailing-link" href="#">massivemailing</a></p>
+            <div id="massivemailing" style="display:none">
+                
+                    <li><a href='/runner/cupstoemaila'>Email validación de instalación desde CUPS en excel</a></li>
+                
+                    <li><a href='/runner/cupstoemailb'>Email petición documentación desde CUPS en excel</a></li>
+                
+            </div>
+        
+    </ul>
+<script>
+    
+        $("#measurefixing-link").click(function(){
+            if ($("#measurefixing").css("display")=="none"){
+                $("#measurefixing").show("slow");
+            }
+            else {
+                $("#measurefixing").hide("slow");
+            }
+        }
+        );
+    
+        $("#invoicefixing-link").click(function(){
+            if ($("#invoicefixing").css("display")=="none"){
+                $("#invoicefixing").show("slow");
+            }
+            else {
+                $("#invoicefixing").hide("slow");
+            }
+        }
+        );
+    
+        $("#massivemailing-link").click(function(){
+            if ($("#massivemailing").css("display")=="none"){
+                $("#massivemailing").show("slow");
+            }
+            else {
+                $("#massivemailing").hide("slow");
+            }
+        }
+        );
+    
+</script>
+</body>
+</html>
