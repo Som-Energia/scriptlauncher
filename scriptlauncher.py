@@ -62,10 +62,13 @@ def config():
     return config.data
 config.data = None
 
+def configScripts():
+    return config()
+
 @app.route('/', methods=('GET', 'POST'))
 @requires_auth
 def index():
-    scripts = config()
+    scripts = configScripts()
     forms={}
     tags = set()
     for script in scripts.itervalues():
@@ -88,7 +91,7 @@ def upload():
 @app.route('/runner/<cmd>')
 @requires_auth
 def runner(cmd):
-    scripts = config()
+    scripts = configScripts()
     script=scripts[cmd]
     if 'fileparameter' in script:
         session['filename']=scripts[cmd]['fileparameter']['name']
@@ -101,7 +104,7 @@ def runner(cmd):
 
 def execute(scriptname):
     import os
-    scripts = config()
+    scripts = configScripts()
     os.environ['SOME_SRC']=configdb.prefix
     parameters = ns(request.form.items())
     commandline = scripts[scriptname].script.format(**parameters)
