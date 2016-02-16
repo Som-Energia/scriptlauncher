@@ -88,3 +88,9 @@ senselectureanterior:
   description: Sin lectura anterior
   tags:
     - measurefixing
+
+test:
+  script: $SOME_SRC/scriptlauncher/test.py
+  description: Working test
+  tags: []
+

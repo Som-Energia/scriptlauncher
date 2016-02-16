@@ -17,7 +17,8 @@ app.config.from_object(__name__)
 
 
 filename=''
-scripts = ns.load('scripts.yaml')
+scripts = None
+debug = True
 import configdb
 
 
@@ -56,11 +57,18 @@ def flash_errors(form):
             errors
         ))
 
+def config():
+    global scripts
+    if scripts is None or debug is True:
+        scripts = ns.load('scripts.yaml')
+    return scripts
+
+
+
 @app.route('/', methods=('GET', 'POST'))
 @requires_auth
 def index():
-    global scripts
-    scripts = ns.load('scripts.yaml')
+    scripts = config()
     forms={}
     tags = set()
     for script in scripts.itervalues():
@@ -68,6 +76,7 @@ def index():
             tags.add(tag)
     return render_template('index_template.html',
         items=scripts.items(),tags=tags)
+
 @app.route('/upload', methods=('GET','POST'))
 @requires_auth
 def upload():
@@ -82,8 +91,7 @@ def upload():
 @app.route('/runner/<cmd>')
 @requires_auth
 def runner(cmd):
-    global scripts
-    scripts = ns.load('scripts.yaml')
+    scripts = config()
     script=scripts[cmd]
     if 'fileparameter' in script:
         session['filename']=scripts[cmd]['fileparameter']['name']
@@ -96,6 +104,7 @@ def runner(cmd):
 
 def execute(scriptname):
     import os
+    scripts = config()
     os.environ['SOME_SRC']=configdb.prefix
     parameters = ns(request.form.items())
     commandline = scripts[scriptname].script.format(**parameters)
@@ -123,8 +132,6 @@ def execute(scriptname):
 @app.route('/run/<scriptname>', methods=['POST','GET'])
 @requires_auth
 def script_without_parms(scriptname):
-    global scripts
-    scripts = ns.load('scripts.yaml')
     return execute(scriptname)
 
 
