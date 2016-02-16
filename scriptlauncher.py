@@ -17,7 +17,6 @@ app.config.from_object(__name__)
 
 
 filename=''
-scripts = None
 debug = True
 import configdb
 
@@ -58,12 +57,10 @@ def flash_errors(form):
         ))
 
 def config():
-    global scripts
-    if scripts is None or debug is True:
-        scripts = ns.load('scripts.yaml')
-    return scripts
-
-
+    if config.data is None or debug is True:
+        config.data = ns.load('scripts.yaml')
+    return config.data
+config.data = None
 
 @app.route('/', methods=('GET', 'POST'))
 @requires_auth
