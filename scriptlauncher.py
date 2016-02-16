@@ -63,7 +63,10 @@ def config():
 config.data = None
 
 def configScripts():
-    return config()
+    scripts = ns()
+    for key, category in config().items():
+        scripts.update(category.scripts)
+    return scripts
 
 @app.route('/', methods=('GET', 'POST'))
 @requires_auth
