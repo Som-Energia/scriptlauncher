@@ -20,6 +20,9 @@
         .return_code {
             padding: 1ex;
         }
+        .param_name {
+            padding: 1ex;
+        }
         .loading { margin: auto; }
 
         .loading span {
@@ -63,14 +66,15 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>{{name}}: {{description}}</h1>
+    <h1>{{name}}</h1>
+    <h2>{{description}}</h2>
     <form name="runner" id="runner">
         {% if fileparameter is defined %}
             <input type="hidden" name="filename" value="{{fileparameter.name}}" ></input>
         {% endif %}
         {% if parameters is defined %}
             {% for paramname,parameter in parameters.items() %}
-                <div><label for="{{paramname}}">{{parameter.description}}</label><input name="{{paramname}}"/></div>
+                <div><label for="{{paramname}}" class="param_name">{{parameter.description}}</label><input name="{{paramname}}"/></div>
             {% endfor %}
         {% endif %}
         <input type="submit" value="Ejecutar"/>
@@ -89,6 +93,7 @@ $(document).ready(function(){
     console.log("defining");
     $("#runner").submit(function(e) {
         console.log("Submiting");
+        $("#result").css("border-color","#489");
         $("#runner").loader({
             imgUrl: "{{ url_for('static', filename='loading32x32.gif') }}"
         });
@@ -100,6 +105,9 @@ $(document).ready(function(){
                  var response= jQuery.parseJSON(data);
                  $("#result").html(response.response);
                  $("#return-code").html(response.return_code);
+                 if (response.return_code<0) {
+                     $("#result").css("border-color","#C80000");
+                 }
                  $.loader.close();
                  }
              );
