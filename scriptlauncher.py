@@ -71,14 +71,10 @@ def configScripts():
 @app.route('/', methods=('GET', 'POST'))
 @requires_auth
 def index():
-    scripts = configScripts()
+    scripts = config()
     forms={}
-    tags = set()
-    for script in scripts.itervalues():
-        for tag in script.tags:
-            tags.add(tag)
     return render_template('index_template.html',
-        items=scripts.items(),tags=tags)
+        items=scripts.items())
 
 @app.route('/upload', methods=('GET','POST'))
 @requires_auth

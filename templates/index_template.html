@@ -8,17 +8,21 @@
 <body>
     <h1>Scripts</h1>
     <ul>
-        {% for tag in tags %}
-            <p><a id="{{tag+'-link'}}" href="#">{{tag}}</a></p>
-            <div id="{{ tag }}" style="display:none">
-                {% for scriptname,script in items if tag in script.tags %}
+        {% for category,values in items %}
+            {% if 'description' in values %}
+                <p><a id="{{category+'-link'}}" href="#">{{values.description}}</a></p>
+            {% else %}
+                <p><a id="{{category+'-link'}}" href="#">{{category}}</a></p>
+            {% endif %}
+            <div id="{{category}}" style="display:none">
+                {% for scriptname,script in values.scripts.items() %}
                     <li><a href='/runner/{{scriptname}}'>{{script.description}}</a></li>
                 {% endfor %}
             </div>
         {% endfor %}
     </ul>
 <script>
-    {% for tag in tags %}
+    {% for tag,values in items %}
         $("#{{tag}}-link").click(function(){
             if ($("#{{tag}}").css("display")=="none"){
                 $("#{{tag}}").show("slow");

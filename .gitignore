@@ -1,5 +1,6 @@
 uploads/*
 example/
+b2b/*result*
 configdb.py
 test.cfg
 # Byte-compiled / optimized / DLL files

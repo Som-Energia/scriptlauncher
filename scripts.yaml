@@ -1,4 +1,5 @@
 measurefixing:
+  description: Scripts que miden algo.
   scripts:
     quadrecontrol:
       script: $SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
@@ -60,6 +61,7 @@ measurefixing:
       tags:
       - measurefixing
 massivemailing:
+  description: Scripts que mandan mail
   scripts:
     cupstoemaila:
       script: $SOME_SRC/cups2emaila/cups2email_lang_a.py
@@ -81,6 +83,7 @@ massivemailing:
         name: test.xlsx
         description: Excel con los cups
 invoicefixing:
+  description: scripts que corrijen facturas
   scripts:
     fixrefundinvoice:
       script: $SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
@@ -92,6 +95,7 @@ invoicefixing:
           code: -i
           description: Invoice number
 test:
+  description: script de test
   scripts:
     test:
       script: $SOME_SRC/scriptlauncher/test.py
