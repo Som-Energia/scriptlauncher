@@ -103,6 +103,7 @@ def runner(cmd):
 
 def execute(scriptname):
     import os
+    shlex.whitespace_split=True
     scripts = configScripts()
     os.environ['SOME_SRC']=configdb.prefix
     parameters = ns(request.form.items())
@@ -113,11 +114,15 @@ def execute(scriptname):
             params_list.append(scripts[scriptname]['fileparameter']['code'])
         params_list.append(os.path.join(configdb.upload_folder,session['filename']))
     if 'parameters' in scripts[scriptname]:
-        for parm in parameters:
-            if scripts[scriptname]['parameters'][parm]['code']:
-                params_list.append(scripts[scriptname]['parameters'][parm]['code'])
-            params_list.append(' '.join(list(shlex.shlex(parameters[parm],posix=True))))
-
+        for parm_name,parm_data in scripts[scriptname]['parameters'].items():
+            if 'userdescription' in parm_data:
+                parm_parsed=parm_data['code'].replace('PARM',parameters[parm_name])
+            else:
+                parm_parsed=parm_data['code']
+            splitter=shlex.shlex(parm_parsed,posix=True)
+            splitter.whitespace_split=True
+            parm_shlex=list(splitter)
+            params_list+=parm_shlex
     commandline = scripts[scriptname].script.replace('$SOME_SRC',configdb.prefix)
     return_code=0
     try:

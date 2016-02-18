@@ -4,70 +4,49 @@ measurefixing:
     quadrecontrol:
       script: $SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
       description: Validación de cuadro de control
-      tags:
-      - measurefixing
      
     errorsprincipals:
       script: $SOME_SRC/invoice-janitor/measurefixing/Validacio0_errors_principal.py
       description: Validación de errores principales
-      tags:
-        - measurefixing
     
     validacionbajas:
       script: $SOME_SRC/invoice-janitor/measurefixing/Validacio1_baixes_2.py
       description: Validación de bajas
-      tags:
-        - measurefixing
     
     polizasbajas:  
       script: $SOME_SRC/invoice-janitor/measurefixing/Validacio2_eliminar_polisses_baixa.py
       description: Eliminar bajas de polizas
-      tags:
-        - measurefixing
     
     sobreestimaciones:
       script: $SOME_SRC/invoice-janitor/measurefixing/Validacio3_sobre_estimacions.py
       description: Sobreestimaciones
-      tags:
-        - measurefixing
     
     
     sinlecturamaximetro:
       script: $SOME_SRC/invoice-janitor/measurefixing/Validacio4_sense_lectura_maximetre.py
       description: Sin lectura maxímetro
-      tags:
-        - measurefixing
     
     validacionincompleta:
       script: $SOME_SRC/invoice-janitor/measurefixing/Validacio5_incompleta.py
       description: Validación incompleta
-      tags:
-        - measurefixing
     
     lecturacierre:
       script: $SOME_SRC/invoice-janitor/measurefixing/Validacio6_lectura_tancament.py
       description: Script que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.
-      tags:
-        - measurefixing
     
     cierremejorado:
       script: $SOME_SRC/invoice-janitor/measurefixing/Validacio7_tancament_millorat.py
       description: Script MEJORADO que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.
-      tags:
-        - measurefixing
+    
     senselectureanterior:
       script: $SOME_SRC/invoice-janitor/measurefixing/Validacio8_sense_lectura_anterior.py
       description: Sin lectura anterior
-      tags:
-      - measurefixing
 massivemailing:
   description: Scripts que mandan mail
   scripts:
     cupstoemaila:
       script: $SOME_SRC/cups2emaila/cups2email_lang_a.py
       description: Email validación de instalación desde CUPS en excel
-      tags:
-        - massivemailing
       fileparameter:
         code:
         name: test.xlsx
@@ -76,8 +55,6 @@ massivemailing:
     cupstoemailb:
       script: $SOME_SRC/cups2emailb/cups2email_lang_b.py
       description: Email petición documentación desde CUPS en excel
-      tags:
-        - massivemailing
       fileparameter:
         code:
         name: test.xlsx
@@ -88,17 +65,17 @@ invoicefixing:
     fixrefundinvoice:
       script: $SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
       description: corregir factura rectificativa
-      tags:
-        - invoicefixing
       parameters:
         invoice:
-          code: -i
-          description: Invoice number
+          code: -i PARM
+          userdescription: Invoice number
 test:
-  description: script de test
+  description: scripts de test
   scripts:
     test:
-      script: $SOME_SRC/scriptlauncher/test.py
+      script: /usr/bin/printf
       description: Working test
-      tags: []
+      parameters:
+        nouser:
+          code: '"It works\n"'
     

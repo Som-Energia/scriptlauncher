@@ -73,8 +73,8 @@
             <input type="hidden" name="filename" value="{{fileparameter.name}}" ></input>
         {% endif %}
         {% if parameters is defined %}
-            {% for paramname,parameter in parameters.items() %}
-                <div><label for="{{paramname}}" class="param_name">{{parameter.description}}</label><input name="{{paramname}}"/></div>
+            {% for paramname,parameter in parameters.items() if 'userdescription' in parameter %}
+                <div><label for="{{paramname}}" class="param_name">{{parameter.userdescription}}</label><input name="{{paramname}}"/></div>
             {% endfor %}
         {% endif %}
         <input type="submit" value="Ejecutar"/>
