@@ -81,7 +81,7 @@ def index():
 def upload():
     filename=session['filename']
     if request.method == 'POST':
-        file = request.files['file']
+        file = request.files[filename]
         if file:
             filename_path = os.path.join(configdb.upload_folder, filename)
             file.save(filename_path)

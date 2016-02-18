@@ -24,6 +24,11 @@
             padding: 1ex;
         }
         .loading { margin: auto; }
+        
+        .uploading_file {
+            display: none;
+            color: red;
+        }
 
         .loading span {
           line-height: 32px;
@@ -68,9 +73,21 @@
 <body>
     <h1>{{name}}</h1>
     <h2>{{description}}</h2>
+    {% if fileparameter is defined %}
+        <form id="upload-file" method="post" enctype="multipart/form-data">
+            <fieldset>
+                <label for="{{fileparameter.name}}" class="parm_name">{{fileparameter.description}}</label>
+                <input type=file name={{fileparameter.name}}>
+            </fieldset>
+            <fieldset>
+                <button id="upload-file-btn" type="button">Upload</button>
+            </fieldset>
+        </form>
+        <div id="uploading-file" class="uploading_file">Loading...</div>
+    {% endif %}
     <form name="runner" id="runner">
         {% if fileparameter is defined %}
-            <input type="hidden" name="filename" value="{{fileparameter.name}}" ></input>
+            <input type="hidden" name="filename" value="{{fileparameter.name}}"></input>
         {% endif %}
         {% if parameters is defined %}
             {% for paramname,parameter in parameters.items() if 'userdescription' in parameter %}
@@ -79,11 +96,6 @@
         {% endif %}
         <input type="submit" value="Ejecutar"/>
     </form>
-    {% if fileparameter is defined %}
-        <div id="dropbox">
-            <span class="message">Arrastra aquí el <b>{{fileparameter.description}}</b></span>
-        </div>
-    {% endif %}
     <div class="commandline"><tt>{{script}}</tt></div>
     <div id="result" class="ansi_terminal"></div>
     <div id="index-link" class="links"><a href="/">Index</a></div>
@@ -94,6 +106,7 @@ $(document).ready(function(){
     $("#runner").submit(function(e) {
         console.log("Submiting");
         $("#result").css("border-color","#489");
+        $("#uploading-file").css("display","none");
         $("#runner").loader({
             imgUrl: "{{ url_for('static', filename='loading32x32.gif') }}"
         });
@@ -112,6 +125,30 @@ $(document).ready(function(){
                  }
              );
         e.preventDefault();
+    });
+    $('#upload-file-btn').click(function() {
+        var form_data = new FormData($('#upload-file')[0]);
+        $("#upload-file").loader({
+            imgUrl: "{{ url_for('static', filename='loading32x32.gif') }}"
+        });
+        $("#uploading-file").css("display","block");
+        $("#uploading-file").css("color","red");
+        $("#uploading-file").html("Loading...");
+        $.ajax({
+            type: 'POST',
+            url: '/upload',
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            async: false,
+            success: function(data) {
+                console.log('Success file uploading!');
+                $("#uploading-file").css("color","green");
+                $("#uploading-file").html("Loaded!");
+                $.loader.close();
+            },
+        });
     });
 });
 </script>
