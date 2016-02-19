@@ -47,18 +47,18 @@ massivemailing:
     cupstoemaila:
       script: $SOME_SRC/cups2emaila/cups2email_lang_a.py
       description: Email validación de instalación desde CUPS en excel
-      fileparameter:
-        code:
-        name: test.xlsx
-        description: Excel con los cups
+      parameters:
+        file:
+          code: FILE
+          userdescription: Excel con los cups
     
     cupstoemailb:
       script: $SOME_SRC/cups2emailb/cups2email_lang_b.py
       description: Email petición documentación desde CUPS en excel
-      fileparameter:
-        code:
-        name: test.xlsx
-        description: Excel con los cups
+      parameters:
+        file:
+          code: FILE
+          userdescription: Excel con los cups
 invoicefixing:
   description: scripts que corrijen facturas
   scripts:
@@ -78,4 +78,18 @@ test:
       parameters:
         nouser:
           code: '"It works\n"'
+    test2:
+      script: /bin/cat
+      description: Concatentate files
+      parameters:
+        parm1:
+          code: 'FILE'
     
+    test3:
+      script: /bin/grep
+      description: Concatentate files
+      parameters:
+        parm1:
+          code: -R
+        parm2:
+          code: -f FILE

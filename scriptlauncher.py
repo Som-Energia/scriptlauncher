@@ -11,6 +11,7 @@ import json
 import bitstring
 import os
 from datetime import datetime
+from werkzeug import secure_filename
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -79,11 +80,11 @@ def index():
 @app.route('/upload', methods=('GET','POST'))
 @requires_auth
 def upload():
-    filename=session['filename']
     if request.method == 'POST':
-        file = request.files[filename]
+        file = request.files['file']
+        session['filename']=secure_filename(file.filename)    
         if file:
-            filename_path = os.path.join(configdb.upload_folder, filename)
+            filename_path = os.path.join(configdb.upload_folder, session['filename'])
             file.save(filename_path)
             return jsonify({"success":True})
 
@@ -92,8 +93,6 @@ def upload():
 def runner(cmd):
     scripts = configScripts()
     script=scripts[cmd]
-    if 'fileparameter' in script:
-        session['filename']=scripts[cmd]['fileparameter']['name']
     return render_template(
         'runner_template.html',
         name=cmd,
@@ -103,20 +102,18 @@ def runner(cmd):
 
 def execute(scriptname):
     import os
-    shlex.whitespace_split=True
     scripts = configScripts()
     os.environ['SOME_SRC']=configdb.prefix
     parameters = ns(request.form.items())
     commandline = scripts[scriptname].script.format(**parameters)
     params_list = []
-    if 'fileparameter' in scripts[scriptname]:
-        if scripts[scriptname]['fileparameter']['code']:
-            params_list.append(scripts[scriptname]['fileparameter']['code'])
-        params_list.append(os.path.join(configdb.upload_folder,session['filename']))
     if 'parameters' in scripts[scriptname]:
         for parm_name,parm_data in scripts[scriptname]['parameters'].items():
-            if 'userdescription' in parm_data:
+            if 'PARM' in parm_data['code']:
                 parm_parsed=parm_data['code'].replace('PARM',parameters[parm_name])
+            elif 'FILE' in parm_data['code']:
+                filename=os.path.join(configdb.upload_folder,session['filename'])
+                parm_parsed=parm_data['code'].replace('FILE',filename)
             else:
                 parm_parsed=parm_data['code']
             splitter=shlex.shlex(parm_parsed,posix=True)
@@ -125,12 +122,17 @@ def execute(scriptname):
             params_list+=parm_shlex
     commandline = scripts[scriptname].script.replace('$SOME_SRC',configdb.prefix)
     return_code=0
+
     try:
-        output=subprocess.check_output([commandline]+params_list,stderr=subprocess.STDOUT).decode('utf-8')
+        output=subprocess.check_output([commandline]+params_list,stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
         output=e.output
         return_code=bitstring.Bits(uint=e.returncode, length=8).unpack('int')[0]
-    return '{"return_code":'+json.dumps(return_code)+', "response": '+json.dumps(deansi.deansi(output))+'}'
+    try:
+        output_decoded=output.decode('utf-8')
+    except UnicodeDecodeError:
+        output_decoded=output.decode('latin-1')
+    return '{"return_code":'+json.dumps(return_code)+', "response": '+json.dumps(deansi.deansi(output_decoded))+'}'
 
 
 @app.route('/run/<scriptname>', methods=['POST','GET'])

@@ -73,24 +73,26 @@
 <body>
     <h1>{{name}}</h1>
     <h2>{{description}}</h2>
-    {% if fileparameter is defined %}
-        <form id="upload-file" method="post" enctype="multipart/form-data">
-            <fieldset>
-                <label for="{{fileparameter.name}}" class="parm_name">{{fileparameter.description}}</label>
-                <input type=file name={{fileparameter.name}}>
-            </fieldset>
-            <fieldset>
-                <button id="upload-file-btn" type="button">Upload</button>
-            </fieldset>
-        </form>
-        <div id="uploading-file" class="uploading_file">Loading...</div>
+    {% if parameters is defined %}
+        {% for paramname,parameter in parameters.items() if 'FILE' in parameter.code %}
+            <form id="upload-file" method="post" enctype="multipart/form-data">
+                <fieldset>
+                    <label for="{{paramname}}" class="parm_name">{{parameter.userdescription}}</label>
+                    <input type=file name='file'>
+                </fieldset>
+                <fieldset>
+                    <button id="upload-file-btn" type="button">Upload</button>
+                </fieldset>
+            </form>
+            <div id="uploading-file" class="uploading_file">Loading...</div>
+        {% endfor %}
     {% endif %}
     <form name="runner" id="runner">
         {% if fileparameter is defined %}
             <input type="hidden" name="filename" value="{{fileparameter.name}}"></input>
         {% endif %}
         {% if parameters is defined %}
-            {% for paramname,parameter in parameters.items() if 'userdescription' in parameter %}
+            {% for paramname,parameter in parameters.items() if 'PARM' in parameter.code %}
                 <div><label for="{{paramname}}" class="param_name">{{parameter.userdescription}}</label><input name="{{paramname}}"/></div>
             {% endfor %}
         {% endif %}
