@@ -107,8 +107,14 @@ $(document).ready(function(){
     console.log("defining");
     $("#runner").submit(function(e) {
         console.log("Submiting");
+        if ( $( "#uploading-file" ).length) {
+            if ($("#uploading-file").css("color") != "rgb(0, 128, 0)"){
+                alert("No has cargado el archivo");
+                return;
+            }
+            $("#uploading-file").css("display","none");
+        }
         $("#result").css("border-color","#489");
-        $("#uploading-file").css("display","none");
         $("#runner").loader({
             imgUrl: "{{ url_for('static', filename='loading32x32.gif') }}"
         });
