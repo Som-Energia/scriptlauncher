@@ -123,10 +123,21 @@ $(document).ready(function(){
     console.log("defining");
     $("#runner").submit(function(e) {
         console.log("Submiting");
-        if ( $( "#uploading-file" ).length) {
-            if ($("#uploading-file").css("color") != "rgb(0, 128, 0)"){
-                alert("No has cargado el archivo");
-                return;
+        if ( $( ".uploading_file" ).length) {
+            console.log("There are uploading file class elements");
+            var colorArray = $(".uploading_file").map(function () {
+                        return $(this).css("color");
+                    }).get();
+            for (i = 0; i < colorArray.length; i++) {
+                if ( colorArray[i]!= "rgb(0, 128, 0)"){
+                    if ($( ".uploading_file" ).length == 1){
+                        alert("No has cargado el archivo");
+                    }
+                    else {
+                        alert("No has cargado todos los archivos");
+                    }
+                    return;
+                }
             }
             $("#uploading-file").css("display","none");
         }
@@ -150,30 +161,7 @@ $(document).ready(function(){
              );
         e.preventDefault();
     });
-    $('#upload-file-btn').click(function() {
-        var form_data = new FormData($('#upload-file')[0]);
-        $("#upload-file").loader({
-            imgUrl: "/static/loading32x32.gif"
-        });
-        $("#uploading-file").css("display","block");
-        $("#uploading-file").css("color","red");
-        $("#uploading-file").html("Loading...");
-        $.ajax({
-            type: 'POST',
-            url: '/upload',
-            data: form_data,
-            contentType: false,
-            cache: false,
-            processData: false,
-            async: false,
-            success: function(data) {
-                console.log('Success file uploading!');
-                $("#uploading-file").css("color","green");
-                $("#uploading-file").html("Loaded!");
-                $.loader.close();
-            },
-        });
-    });
+    
 });
 </script>
 </body>

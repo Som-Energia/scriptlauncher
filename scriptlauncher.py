@@ -82,9 +82,10 @@ def index():
 def upload():
     if request.method == 'POST':
         file = request.files['file']
-        session['filename']=secure_filename(file.filename)    
+        parmname=request.form['filename']
+        session[parmname]=secure_filename(file.filename)    
         if file:
-            filename_path = os.path.join(configdb.upload_folder, session['filename'])
+            filename_path = os.path.join(configdb.upload_folder, session[parmname])
             file.save(filename_path)
             return jsonify({"success":True})
 
@@ -112,7 +113,7 @@ def execute(scriptname):
             if 'PARM' in parm_data['code']:
                 parm_parsed=parm_data['code'].replace('PARM',parameters[parm_name])
             elif 'FILE' in parm_data['code']:
-                filename=os.path.join(configdb.upload_folder,session['filename'])
+                filename=os.path.join(configdb.upload_folder,session[parm_name])
                 parm_parsed=parm_data['code'].replace('FILE',filename)
             else:
                 parm_parsed=parm_data['code']

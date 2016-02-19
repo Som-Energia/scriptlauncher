@@ -84,7 +84,11 @@ test:
       parameters:
         parm1:
           code: 'FILE'
-    
+        parm2:
+          code: 'FILE'
+        parm3:
+          code: 'FILE'
+        
     test3:
       script: /bin/grep
       description: Concatentate files
