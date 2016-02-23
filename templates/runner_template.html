@@ -152,6 +152,7 @@ $(document).ready(function(){
              );
         e.preventDefault();
     });
+    {% if parameters is defined %}
     {% for paramname,parameter in parameters.items() if 'FILE' in parameter.code %}
         $('#upload-file-btn-{{paramname}}').click(function() {
             var form_data = new FormData($('#upload-file-{{paramname}}')[0]);
@@ -179,6 +180,7 @@ $(document).ready(function(){
             });
         });
     {% endfor %}
+    {% endif %}
 });
 </script>
 </body>
