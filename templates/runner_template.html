@@ -148,7 +148,7 @@ $(document).ready(function(){
                  var response= jQuery.parseJSON(data);
                  $("#result").html(response.response);
                  $("#return-code").html(response.return_code);
-                 if (response.return_code<0) {
+                 if (response.return_code!=0) {
                      $("#result").css("border-color","#C80000");
                  }
                  $.loader.close();
