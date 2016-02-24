@@ -4,4 +4,8 @@
 - <del>Add loading... feedback</del>
 - <del>Disable Execute button after press</del>
 - Style parameter fields
-- File upload and pass it as a parameter to scripts
+- ~~File upload and pass it as a parameter to scripts~~
+- Agilize the file fields filling
+- Show final commandline
+
+
