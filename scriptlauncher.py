@@ -132,7 +132,8 @@ def execute(scriptname):
         output_decoded=output.decode('latin-1')
     return json.dumps(dict(
         return_code=return_code,
-        response="<p>{}</p>".format(commandline)+deansi.deansi(output_decoded),
+        response=deansi.deansi(output_decoded),
+        commandline=commandline,
         ))
 
 
