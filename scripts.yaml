@@ -45,55 +45,57 @@ massivemailing:
   description: Scripts que mandan mail
   scripts:
     cupstoemaila:
-      script: $SOME_SRC/cups2emaila/cups2email_lang_a.py
+      script: $SOME_SRC/cups2emaila/cups2email_lang_a.py {file}
       description: Email validación de instalación desde CUPS en excel
       parameters:
         file:
-          code: FILE
+          type: FILE
           userdescription: Excel con los cups
     
     cupstoemailb:
-      script: $SOME_SRC/cups2emailb/cups2email_lang_b.py
+      script: $SOME_SRC/cups2emailb/cups2email_lang_b.py {file}
       description: Email petición documentación desde CUPS en excel
       parameters:
         file:
-          code: FILE
+          type: FILE
           userdescription: Excel con los cups
 invoicefixing:
   description: scripts que corrijen facturas
   scripts:
     fixrefundinvoice:
-      script: $SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
+      script:
+        - $SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
+        - -i
+        - "{invoice}"
       description: corregir factura rectificativa
       parameters:
         invoice:
-          code: -i PARM
           userdescription: Invoice number
 test:
   description: scripts de test
   scripts:
     test:
-      script: /usr/bin/printf
+      script: /usr/bin/printf {nouser}
       description: Working test
       parameters:
         nouser:
-          code: '"It works\n"'
+          default: '"It works\n"'
     test2:
-      script: /bin/cat
+      script: /bin/cat {param1} {param2} {param3}
       description: Concatentate files
       parameters:
-        parm1:
-          code: 'FILE'
-        parm2:
-          code: 'FILE'
-        parm3:
-          code: 'FILE'
+        param1:
+          type: FILE
+        param2:
+          type: FILE
+        param3:
+          type: FILE
         
     test3:
-      script: /bin/grep
-      description: Concatentate files
+      script: /bin/grep -R "{expr}" "{file}"
+      description: Search in file
       parameters:
-        parm1:
-          code: -R
-        parm2:
-          code: -f FILE
+        expr:
+          userdescription: Expressió regular
+        file:
+          type: FILE

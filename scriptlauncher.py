@@ -8,14 +8,12 @@ import subprocess
 import deansi
 import shlex
 import json
-import bitstring
 import os
 from datetime import datetime
 from werkzeug import secure_filename
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-
 
 filename=''
 debug = True
@@ -94,6 +92,7 @@ def upload():
 def runner(cmd):
     scripts = configScripts()
     script=scripts[cmd]
+    script.islist = type(script.script) is list
     return render_template(
         'runner_template.html',
         name=cmd,
@@ -106,34 +105,35 @@ def execute(scriptname):
     scripts = configScripts()
     os.environ['SOME_SRC']=configdb.prefix
     parameters = ns(request.form.items())
-    commandline = scripts[scriptname].script.format(**parameters)
     params_list = []
     if 'parameters' in scripts[scriptname]:
         for parm_name,parm_data in scripts[scriptname]['parameters'].items():
-            if 'PARM' in parm_data['code']:
-                parm_parsed=parm_data['code'].replace('PARM',parameters[parm_name])
-            elif 'FILE' in parm_data['code']:
+            if parm_data.get('type', None) ==  'FILE':
                 filename=os.path.join(configdb.upload_folder,session[parm_name])
-                parm_parsed=parm_data['code'].replace('FILE',filename)
-            else:
-                parm_parsed=parm_data['code']
-            splitter=shlex.shlex(parm_parsed,posix=True)
-            splitter.whitespace_split=True
-            parm_shlex=list(splitter)
-            params_list+=parm_shlex
-    commandline = scripts[scriptname].script.replace('$SOME_SRC',configdb.prefix)
+                parameters[parm_name] = filename
+    script = scripts[scriptname].script
+    if type(script) is not list:
+        script = shlex.split(script)
+    commandline = [
+        piece.format(**parameters)
+        for piece in script
+        ]
+    commandline[0] = commandline[0].replace('$SOME_SRC',configdb.prefix)
     return_code=0
 
     try:
-        output=subprocess.check_output([commandline]+params_list,stderr=subprocess.STDOUT)
+        output=subprocess.check_output(commandline,stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
         output=e.output
-        return_code=bitstring.Bits(uint=e.returncode, length=8).unpack('int')[0]
+        return_code=e.returncode
     try:
         output_decoded=output.decode('utf-8')
     except UnicodeDecodeError:
         output_decoded=output.decode('latin-1')
-    return '{"return_code":'+json.dumps(return_code)+', "response": '+json.dumps(deansi.deansi(output_decoded))+'}'
+    return json.dumps(dict(
+        return_code=return_code,
+        response="<p>{}</p>".format(commandline)+deansi.deansi(output_decoded),
+        ))
 
 
 @app.route('/run/<scriptname>', methods=['POST','GET'])

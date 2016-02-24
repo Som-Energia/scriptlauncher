@@ -74,7 +74,7 @@
     <h1>{{name}}</h1>
     <h2>{{description}}</h2>
     {% if parameters is defined %}
-        {% for paramname,parameter in parameters.items() if 'FILE' in parameter.code %}
+        {% for paramname,parameter in parameters.items() if parameter.type == 'FILE' %}
             <form id="upload-file-{{paramname}}" method="post" enctype="multipart/form-data">
                 <fieldset>
                     <label for="{{paramname}}" class="parm_name">{{parameter.userdescription}}</label>
@@ -90,14 +90,18 @@
     {% endif %}
     <form name="runner" id="runner">
         {% if parameters is defined %}
-            {% for paramname,parameter in parameters.items() if 'PARM' in parameter.code %}
+            {% for paramname,parameter in parameters.items() if parameter.type != 'FILE' %}
                 <div><label for="{{paramname}}" class="param_name">{{parameter.userdescription}}</label><input name="{{paramname}}"/></div>
             {% endfor %}
         {% endif %}
         <input type="submit" value="Ejecutar"/>
     </form>
     {% if parameters is defined %}
-        <div class="commandline"><tt>{{script}}</tt>
+        {% if islist %}
+            <div class="commandline"><tt>{{" ".join(script)}}</tt>
+        {% else %}
+            <div class="commandline"><tt>{{script}}</tt>
+        {% endif %}
         {% for parameter in parameters.values()%}
             <tt>{{parameter.code}}</tt>
         {% endfor %}
@@ -153,7 +157,7 @@ $(document).ready(function(){
         e.preventDefault();
     });
     {% if parameters is defined %}
-    {% for paramname,parameter in parameters.items() if 'FILE' in parameter.code %}
+    {% for paramname,parameter in parameters.items() if parameter.type == 'FILE' %}
         $('#upload-file-btn-{{paramname}}').click(function() {
             var form_data = new FormData($('#upload-file-{{paramname}}')[0]);
             form_data.append("filename",$('#upload-file-hidden-{{paramname}}'));
