@@ -44,16 +44,16 @@ measurefixing:
 massivemailing:
   description: Scripts que mandan mail
   scripts:
-    cupstoemaila:
-      script: $SOME_SRC/cups2email/cups2email_lang_a.py {file}
+    cupstoemailb:
+      script: $SOME_SRC/cups2email/cups2email_lang_b.py {file}
       description: Email validación de instalación desde CUPS en excel
       parameters:
         file:
           type: FILE
           userdescription: Excel con los cups
     
-    cupstoemailb:
-      script: $SOME_SRC/cups2email/cups2email_lang_b.py {file}
+    cupstoemaila:
+      script: $SOME_SRC/cups2email/cups2email_lang_a.py {file}
       description: Email petición documentación desde CUPS en excel
       parameters:
         file:
