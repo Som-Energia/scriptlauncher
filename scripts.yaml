@@ -79,7 +79,7 @@ test:
       description: Working test
       parameters:
         nouser:
-          default: '"It works\n"'
+          default: "It works\n"
     test2:
       script: /bin/cat {param1} {param2} {param3}
       description: Concatentate files

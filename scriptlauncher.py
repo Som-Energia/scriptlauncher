@@ -111,6 +111,8 @@ def execute(scriptname):
             if parm_data.get('type', None) ==  'FILE':
                 filename=os.path.join(configdb.upload_folder,session[parm_name])
                 parameters[parm_name] = filename
+            if not parameters.get(parm_name, None) and scripts[scriptname]['parameters'][parm_name].get('default',None):
+                parameters[parm_name] = scripts[scriptname]['parameters'][parm_name]['default']
     script = scripts[scriptname].script
     if type(script) is not list:
         script = shlex.split(script)
