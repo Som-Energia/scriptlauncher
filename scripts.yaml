@@ -2,50 +2,50 @@ measurefixing:
   description: Scripts que miden algo.
   scripts:
     quadrecontrol:
-      script: $SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
+      script: SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
       description: Validación de cuadro de control
      
     errorsprincipals:
-      script: $SOME_SRC/invoice-janitor/measurefixing/Validacio0_errors_principal.py
+      script: SOME_SRC/invoice-janitor/measurefixing/Validacio0_errors_principal.py
       description: Validación de errores principales
     
     validacionbajas:
-      script: $SOME_SRC/invoice-janitor/measurefixing/Validacio1_baixes_2.py
+      script: SOME_SRC/invoice-janitor/measurefixing/Validacio1_baixes_2.py
       description: Validación de bajas
     
     polizasbajas:  
-      script: $SOME_SRC/invoice-janitor/measurefixing/Validacio2_eliminar_polisses_baixa.py
+      script: SOME_SRC/invoice-janitor/measurefixing/Validacio2_eliminar_polisses_baixa.py
       description: Eliminar bajas de polizas
     
     sobreestimaciones:
-      script: $SOME_SRC/invoice-janitor/measurefixing/Validacio3_sobre_estimacions.py
+      script: SOME_SRC/invoice-janitor/measurefixing/Validacio3_sobre_estimacions.py
       description: Sobreestimaciones
     
     
     sinlecturamaximetro:
-      script: $SOME_SRC/invoice-janitor/measurefixing/Validacio4_sense_lectura_maximetre.py
+      script: SOME_SRC/invoice-janitor/measurefixing/Validacio4_sense_lectura_maximetre.py
       description: Sin lectura maxímetro
     
     validacionincompleta:
-      script: $SOME_SRC/invoice-janitor/measurefixing/Validacio5_incompleta.py
+      script: SOME_SRC/invoice-janitor/measurefixing/Validacio5_incompleta.py
       description: Validación incompleta
     
     lecturacierre:
-      script: $SOME_SRC/invoice-janitor/measurefixing/Validacio6_lectura_tancament.py
+      script: SOME_SRC/invoice-janitor/measurefixing/Validacio6_lectura_tancament.py
       description: Script que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.
     
     cierremejorado:
-      script: $SOME_SRC/invoice-janitor/measurefixing/Validacio7_tancament_millorat.py
+      script: SOME_SRC/invoice-janitor/measurefixing/Validacio7_tancament_millorat.py
       description: Script MEJORADO que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.
     
     senselectureanterior:
-      script: $SOME_SRC/invoice-janitor/measurefixing/Validacio8_sense_lectura_anterior.py
+      script: SOME_SRC/invoice-janitor/measurefixing/Validacio8_sense_lectura_anterior.py
       description: Sin lectura anterior
 massivemailing:
   description: Scripts que mandan mail
   scripts:
     cupstoemailb:
-      script: $SOME_SRC/cups2email/cups2email_lang_b.py {file}
+      script: SOME_SRC/cups2email/cups2email_lang_b.py {file}
       description: Email validación de instalación desde CUPS en excel
       parameters:
         file:
@@ -53,7 +53,7 @@ massivemailing:
           userdescription: Excel con los cups
     
     cupstoemaila:
-      script: $SOME_SRC/cups2email/cups2email_lang_a.py {file}
+      script: SOME_SRC/cups2email/cups2email_lang_a.py {file}
       description: Email petición documentación desde CUPS en excel
       parameters:
         file:
@@ -64,7 +64,7 @@ invoicefixing:
   scripts:
     fixrefundinvoice:
       script:
-        - $SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
+        - SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
         - -i
         - "{invoice}"
       description: corregir factura rectificativa
@@ -99,3 +99,10 @@ test:
           userdescription: Expressió regular
         file:
           type: FILE
+
+patchscripts:
+    description: We can find many script to solve different problems that we found in Som Energia ERP and informative scripts
+    scripts:
+      canvistitular:
+        script: execute_send_email.py -C ~/config.py -s canvi_titular -t modifica@somenergia.coop -- python /home/pi/somenergia/patchscripts/Revisions_periodiques/canvi_titular_fase3.py
+        description: Última fase del cambio de titular

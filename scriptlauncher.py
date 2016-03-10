@@ -103,7 +103,6 @@ def runner(cmd):
 def execute(scriptname):
     import os
     scripts = configScripts()
-    os.environ['SOME_SRC']=configdb.prefix
     parameters = ns(request.form.items())
     params_list = []
     if 'parameters' in scripts[scriptname]:
@@ -120,7 +119,8 @@ def execute(scriptname):
         piece.format(**parameters)
         for piece in script
         ]
-    commandline[0] = commandline[0].replace('$SOME_SRC',configdb.prefix)
+    commandline = [cmd.replace('SOME_SRC',configdb.prefix) for cmd in commandline]
+    print commandline
     return_code=0
 
     try:
