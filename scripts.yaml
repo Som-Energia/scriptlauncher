@@ -62,6 +62,9 @@ massivemailing:
 invoicefixing:
   description: scripts que corrijen facturas
   scripts:
+    fixextraline:
+      script: SOME_SRC/invoice-janitor/fix_extra_line.py
+      description: Corregir errores extra line
     fixrefundinvoice:
       script:
         - SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
