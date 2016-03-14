@@ -80,6 +80,16 @@ invoicefixing:
       parameters:
         invoice:
           userdescription: Invoice number
+    fixinvoice:
+      script: python SOME_SRC -c {contract_name} -s {start_date} -e {end_date}
+      description: Abonar y rectificar
+      parameters:
+        contract_name:
+          userdescription: Contract identifier
+        start_date:
+          userdescription: Start date
+        end_date:
+          userdescription: End date
 test:
   description: scripts de test
   scripts:
