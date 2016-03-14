@@ -65,6 +65,12 @@ invoicefixing:
     fixextraline:
       script: SOME_SRC/invoice-janitor/fix_extra_line.py
       description: Corregir errores extra line
+    report0lines0days:
+      script: SOME_SRC/invoice-janitor/report_0days_0kWh.py {lot}
+      description: Report 0days 0lines invoices
+      parameters:
+        lot:
+          userdescription: Lot to be processed (mm/yyyy) ej:03/2016
     fixrefundinvoice:
       script:
         - SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
