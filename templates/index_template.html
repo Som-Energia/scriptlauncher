@@ -21,6 +21,7 @@
             </div>
         {% endfor %}
     </ul>
+<!-- Estado del NAS: {{"Usable" if gdrive == "Offline" else "Usar Google Drive"}} -->
 <script>
     {% for tag,values in items %}
         $("#{{tag}}-link").click(function(){

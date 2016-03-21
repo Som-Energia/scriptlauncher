@@ -72,8 +72,10 @@ def configScripts():
 def index():
     scripts = config()
     forms={}
+    w=file("/var/connectivity").read().strip()
     return render_template('index_template.html',
-        items=scripts.items())
+        items=scripts.items(),
+        gdrive=w)
 
 @app.route('/upload', methods=('GET','POST'))
 @requires_auth
