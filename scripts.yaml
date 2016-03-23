@@ -1,73 +1,68 @@
+patchscripts:
+    description: Gestió de contractes
+    scripts:
+      canvistitular:
+        script: execute_send_email.py -C ~/config.py -s canvi_titular -t modifica@somenergia.coop -- python SOME_SRC/patchscripts/Revisions_periodiques/canvi_titular_fase3.py
+        description: Última fase del cambio de titular
+      quadrecontrolgeneral:
+        script: python SOME_SRC/patchscripts/Informacio/General_Quadre_control.py -d {date}
+        description: Información general comercialización
+        parameters:
+          date:
+            userdescription: Data d'estudio
+
 measurefixing:
-  description: Scripts que miden algo.
+  description: Facturació. Validació de lectures
   scripts:
     quadrecontrol:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
-      description: Validación de cuadro de control
+      description: Quadre de control
      
     errorsprincipals:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio0_errors_principal.py
-      description: Validación de errores principales
+      description: Script principal
     
     validacionbajas:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio1_baixes_2.py
-      description: Validación de bajas
+      description: Corretgir errors en baixes
     
     polizasbajas:  
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio2_eliminar_polisses_baixa.py
-      description: Eliminar bajas de polizas
+      description: Eliminar pòlisses de baixa
     
     sobreestimaciones:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio3_sobre_estimacions.py
-      description: Sobreestimaciones
-    
+      description: Corretgir Sobreestimaciones    
     
     sinlecturamaximetro:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio4_sense_lectura_maximetre.py
-      description: Sin lectura maxímetro
+      description: Corretgir errors en lectures de maximetre
     
     validacionincompleta:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio5_incompleta.py
-      description: Validación incompleta
+      description: Corretgir lectures que estan incompletes
     
     lecturacierre:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio6_lectura_tancament.py
-      description: Script que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.
+      description: Corretgir lectures de tancament de comptadors (passar-lo fins que no l'ajuntem amb l'altre)
     
     cierremejorado:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio7_tancament_millorat.py
-      description: Script MEJORADO que sirve para desbloquear casos que no tienen lectura de cierre del contador de baja.
+      description: Corretgir lectures de tancament de comptadors (millorat)
     
     senselectureanterior:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio8_sense_lectura_anterior.py
-      description: Sin lectura anterior
-massivemailing:
-  description: Scripts que mandan mail
-  scripts:
-    cupstoemailb:
-      script: SOME_SRC/cups2email/cups2email_lang_b.py {file}
-      description: Email validación de instalación desde CUPS en excel
-      parameters:
-        file:
-          type: FILE
-          userdescription: Excel con los cups
-    
-    cupstoemaila:
-      script: SOME_SRC/cups2email/cups2email_lang_a.py {file}
-      description: Email petición documentación desde CUPS en excel
-      parameters:
-        file:
-          type: FILE
-          userdescription: Excel con los cups
+      description: Corretgir pòlisses que no es troba la lectura anterior.
+
 invoicefixing:
-  description: scripts que corrijen facturas
+  description: Eines per corretgir factures
   scripts:
     fixextraline:
       script: SOME_SRC/invoice-janitor/fix_extra_line.py
-      description: Corregir errores extra line
+      description: Corretgir errors extra line
     report0lines0days:
       script: SOME_SRC/invoice-janitor/report_0days_0kWh.py {lot}
-      description: Report 0days 0lines invoices
+      description: Factures 0days 0lines
       parameters:
         lot:
           userdescription: Lot to be processed (mm/yyyy) ej:03/2016
@@ -90,6 +85,27 @@ invoicefixing:
           userdescription: Start date
         end_date:
           userdescription: End date
+
+
+massivemailing:
+  description: Petició de renovar Butlletins i verficacions de CUPS
+  scripts:
+    cupstoemailb:
+      script: SOME_SRC/cups2email/cups2email_lang_b.py {file}
+      description: Email validación de instalación desde CUPS en excel
+      parameters:
+        file:
+          type: FILE
+          userdescription: Excel con los cups
+    
+    cupstoemaila:
+      script: SOME_SRC/cups2email/cups2email_lang_a.py {file}
+      description: Email petición documentación desde CUPS en excel
+      parameters:
+        file:
+          type: FILE
+          userdescription: Excel con los cups
+
 test:
   description: scripts de test
   scripts:
