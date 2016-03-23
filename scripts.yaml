@@ -6,7 +6,7 @@ general:
         description: Quadre de control de comercializació
         parameters:
           date:
-            userdescription: Data d'estudio
+            userdescription: Introdueix la data (inclosa) fins a la que vols fer l'estudi amb el format 'YYYY-mm-dd'
 measurefixing:
   description: Facturació. Validació de lectures
   scripts:
@@ -51,9 +51,12 @@ measurefixing:
       description: Corretgir pòlisses que no es troba la lectura anterior.
 
 invoicefixing:
-  description: Facturació. Eines per corretgir F1 i factures
+  description: Facturació. Eines per lots, F1 i factures
   scripts:
-    fixextraline:
+    contractmove:
+      script: SOME_SRC/patchscripts/lots/moure_polisses.py
+      description: Moure polisses al lot següent
+    fixextraline:  
       script: SOME_SRC/invoice-janitor/fix_extra_line.py
       description: Corretgir errors extra line
     report0lines0days:
@@ -61,7 +64,7 @@ invoicefixing:
       description: Factures 0days 0lines
       parameters:
         lot:
-          userdescription: Lot to be processed (mm/yyyy) ej:03/2016
+          userdescription: Introdueix el lot a procesar amb el format "mm/yyyy" ej:03/2016
     fixrefundinvoice:
       script:
         - SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
@@ -76,11 +79,11 @@ invoicefixing:
       description: Abonar i rectificar
       parameters:
         contract_name:
-          userdescription: Contract identifier
+          userdescription: Número de contracte
         start_date:
-          userdescription: Start date
+          userdescription: data inici
         end_date:
-          userdescription: End date
+          userdescription: data final
 
 gestiocontractes:
     description: Gestió de contractes
