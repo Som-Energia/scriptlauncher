@@ -9,14 +9,14 @@
     <h1>Scripts</h1>
     <ul>
         {% for category,values in items %}
-            {% if 'description' in values %}
-                <p><a id="{{category+'-link'}}" href="#">{{values.description}}</a></p>
+            {% if 'title' in values %}
+                <p><a id="{{category+'-link'}}" href="#">{{values.title}}</a></p>
             {% else %}
                 <p><a id="{{category+'-link'}}" href="#">{{category}}</a></p>
             {% endif %}
             <div id="{{category}}" class="script-list" style="display:none">
                 {% for scriptname,script in values.scripts.items() %}
-                    <li><a href='/runner/{{scriptname}}'>{{script.description}}</a></li>
+                    <li><a href='/runner/{{scriptname}}'>{{script.title}}</a></li>
                 {% endfor %}
             </div>
         {% endfor %}
