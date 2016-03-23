@@ -3,7 +3,8 @@ general:
     scripts:
       quadrecontrolgeneral:
         script: python SOME_SRC/patchscripts/Informacio/General_Quadre_control.py -d {date}
-        description: Quadre de control de comercializació
+        title: Quadre de control de comercializació
+        description: Aquest quadre de control et permet veure la stiaució molt genèrica de com està la comercialitació i ens serveix per omplir el Quadre de Control del drive. Si teniu peticions de noves coses a controlar podeu escriure a en Pere
         parameters:
           date:
             userdescription: Introdueix la data (inclosa) fins a la que vols fer l'estudi amb el format 'YYYY-mm-dd'
@@ -12,56 +13,69 @@ measurefixing:
   scripts:
     quadrecontrol:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
-      description: Quadre de control
+      title: Quadre de control Validació
+      description: Serveix per veure com estant els errors actualment de validació.
      
     errorsprincipals:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio0_errors_principal.py
-      description: Script principal
+      title: Script principal
+      description: Ha d'acabar sent l'script on s'excutint tots els altres scripts de correcció de lectures en el procés de validació. Per ara fa una validació de tots els errors de lectura i soluciona els problemes de lectures amb les 3.1A. 
     
     validacionbajas:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio1_baixes_2.py
-      description: Corretgir errors en baixes
+      title: Corretgir errors en baixes
+      description: 
     
     polizasbajas:  
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio2_eliminar_polisses_baixa.py
-      description: Eliminar pòlisses de baixa
+      title: Eliminar pòlisses de baixa
+      description: 
     
     sobreestimaciones:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio3_sobre_estimacions.py
-      description: Corretgir Sobreestimaciones    
+      title: Corretgir Sobreestimaciones
+      description:     
     
     sinlecturamaximetro:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio4_sense_lectura_maximetre.py
-      description: Corretgir errors en lectures de maximetre
+      title: Corretgir errors en lectures de maximetre
+      description: 
     
     validacionincompleta:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio5_incompleta.py
-      description: Corretgir lectures que estan incompletes
+      title: Corretgir lectures que estan incompletes
+      description: 
     
     lecturacierre:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio6_lectura_tancament.py
-      description: Corretgir lectures de tancament de comptadors (passar-lo fins que no l'ajuntem amb l'altre)
+      title: Corretgir lectures de tancament de comptadors (passar-lo fins que no l'ajuntem amb l'altre)
+      description: 
     
     cierremejorado:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio7_tancament_millorat.py
-      description: Corretgir lectures de tancament de comptadors (millorat)
+      title: Corretgir lectures de tancament de comptadors (millorat)
+      description: 
     
     senselectureanterior:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio8_sense_lectura_anterior.py
-      description: Corretgir pòlisses que no es troba la lectura anterior.
+      title: Corretgir pòlisses que no es troba la lectura anterior.
+      description: 
 
 invoicefixing:
   description: Facturació. Eines per lots, F1 i factures
   scripts:
     contractmove:
       script: SOME_SRC/patchscripts/lots/moure_polisses.py
-      description: Moure polisses al lot següent
+      title: Moure polisses al lot següent 
+      description: ATENCIÓ! Aquest script només s'ha d'utiltizar quan es vol fer canvi de lot i lot actual el volem tancar. Aquest scripts et permet moure les polisses que falten per facturar al següent lot
     fixextraline:  
       script: SOME_SRC/invoice-janitor/fix_extra_line.py
-      description: Corretgir errors extra line
+      title: Corretgir errors extra line
+      description: 
     report0lines0days:
       script: SOME_SRC/invoice-janitor/report_0days_0kWh.py {lot}
-      description: Factures 0days 0lines
+      title: Factures 0days 0lines
+      description: 
       parameters:
         lot:
           userdescription: Introdueix el lot a procesar amb el format "mm/yyyy" ej:03/2016
@@ -70,13 +84,15 @@ invoicefixing:
         - SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
         - -i
         - "{invoice}"
-      description: Corretgir factura rectificativa
+      title: Corretgir factura rectificativa
+      description: 
       parameters:
         invoice:
           userdescription: Invoice number
     fixinvoice:
       script: python SOME_SRC/invoice-janitor/invoicefixing/fix_invoice.py -c {contract_name} -s {start_date} -e {end_date}
-      description: Abonar i rectificar
+      title: Abonar i rectificar
+      description: 
       parameters:
         contract_name:
           userdescription: Número de contracte
@@ -90,14 +106,16 @@ gestiocontractes:
     scripts:
       canvistitular:
         script: execute_send_email.py -C ~/config.py -s canvi_titular -t modifica@somenergia.coop -- python SOME_SRC/patchscripts/Revisions_periodiques/canvi_titular_fase3.py
-        description: Canvi de titular. Última fase
+        title: Canvi de titular. Última fase
+      description: Un cop ens arriben els M102 d'accpetació de canvi de titular, fem totes les accions per donar de baixa el contracte vell i crear el nou amb el nou titular.
 
 massivemailing:
   description: Gestió de contractes. Petició de renovar Butlletins i verficacions de CUPS
   scripts:
     cupstoemailb:
       script: SOME_SRC/cups2email/cups2email_lang_b.py {file}
-      description: Email validació de instalació a partir dels CUPS facilitats per la distribuidora
+      title: Email validació de instalació a partir dels CUPS facilitats per la distribuidora
+      description: 
       parameters:
         file:
           type: FILE
@@ -105,7 +123,8 @@ massivemailing:
     
     cupstoemaila:
       script: SOME_SRC/cups2email/cups2email_lang_a.py {file}
-      description: Email petició documentació a partir dels CUPS facilitats per la distribuidora
+      title: Email petició documentació a partir dels CUPS facilitats per la distribuidora
+      description: 
       parameters:
         file:
           type: FILE
@@ -116,13 +135,15 @@ test:
   scripts:
     test:
       script: /usr/bin/printf {nouser}
-      description: Working test
+      title: Working test
+      description: 
       parameters:
         nouser:
           default: "It works\n"
     test2:
       script: /bin/cat {param1} {param2} {param3}
-      description: Concatentate files
+      title: Concatentate files
+      description: 
       parameters:
         param1:
           type: FILE
@@ -133,7 +154,8 @@ test:
         
     test3:
       script: /bin/grep -R "{expr}" "{file}"
-      description: Search in file
+      title: Search in file
+      description: 
       parameters:
         expr:
           userdescription: Expressió regular
