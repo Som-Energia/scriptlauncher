@@ -14,7 +14,7 @@ measurefixing:
     quadrecontrolvalidacio:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
       title: Quadre de control Validació
-      description: Serveix per veure com estant els errors actualment de validació.
+      description: Serveix per quantificar els errors que actualment tenim en el validació de les lectures
      
     errorsprincipals:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio0_errors_principal.py
