@@ -11,7 +11,7 @@ general:
 measurefixing:
   description: Facturació. Validació de lectures
   scripts:
-    quadrecontrol:
+    quadrecontrolvalidacio:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
       title: Quadre de control Validació
       description: Serveix per veure com estant els errors actualment de validació.
@@ -107,7 +107,11 @@ gestiocontractes:
       canvistitular:
         script: execute_send_email.py -C ~/config.py -s canvi_titular -t modifica@somenergia.coop -- python SOME_SRC/patchscripts/Revisions_periodiques/canvi_titular_fase3.py
         title: Canvi de titular. Última fase
-      description: Un cop ens arriben els M102 d'accpetació de canvi de titular, fem totes les accions per donar de baixa el contracte vell i crear el nou amb el nou titular.
+        description: Un cop ens arriben els M102 d'accpetació de canvi de titular, fem totes les accions per donar de baixa el contracte vell i crear el nou amb el nou titular.
+      quadrecontrolsw:
+        script: python SOME_SRC/patchscripts/Informacio/switching_qc.py
+        title: Quadre de control Gestió de contractes
+        description: Aquest quadre de control permet veure la situació dels processos. Veiem si tenim endarreriments en alguns dels passos del cas
 
 massivemailing:
   description: Gestió de contractes. Petició de renovar Butlletins i verficacions de CUPS
