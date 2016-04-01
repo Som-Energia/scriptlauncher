@@ -100,6 +100,11 @@ invoicefixing:
           userdescription: data inici
         end_date:
           userdescription: data final
+    killalreadyexist:
+      script: SOME_SRC/patchscripts/Importacions_F1_Q1/Fact_impF1_eliminar_Ja_existeix.py
+      title: Eliminar importacions de F1 repetides o invàlides
+      description: Elimina les importacions de F1 amb el text d'error "Ja existeix una factura...", "XML erroni", "XML no correspon al tipus F1" i "Document invàlid"
+
 
 gestiocontractes:
     description: Gestió de contractes
