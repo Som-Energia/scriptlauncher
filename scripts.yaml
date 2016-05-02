@@ -70,7 +70,7 @@ invoicefixing:
   description: Facturació. Eines per lots, F1 i factures
   scripts:
     contractmove:
-      script: SOME_SRC/patchscripts/lots/moure_polisses.py
+      script: python SOME_SRC/patchscripts/lots/moure_polisses.py
       title: Moure polisses al lot següent 
       description: ATENCIÓ! Aquest script només s'ha d'utiltizar quan es vol fer canvi de lot i lot actual el volem tancar. Aquest scripts et permet moure les polisses que falten per facturar al següent lot
     fixmoddate:  
