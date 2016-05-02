@@ -14,8 +14,13 @@ measurefixing:
     quadrecontrolvalidacio:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio_Quadre_control.py
       title: Quadre de control Validació
-      description: Serveix per quantificar els errors que actualment tenim en el validació de les lectures
-     
+      description: Serveix per quantificar els errors que actualment tenim en el validació de les lectures  
+
+    canvicomptadors:
+      script: SOME_SRC/invoice-janitor/measurefixing/rectificar_lectures_canvi_comptador.py
+      tittle: Canvi de comptadors
+      description: Gestiona els canvi de comptadors que no han estat informant i hem seguit facturant-los amb estimades fetes per Som Energia. Informa per pantalla els errors que hi han en el rpocés pe rtla de que es puguin solucionar per temàtica i anar veient quines es poden automatitzar.
+
     errorsprincipals:
       script: SOME_SRC/invoice-janitor/measurefixing/Validacio0_errors_principal.py
       title: Script principal
