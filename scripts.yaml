@@ -151,6 +151,13 @@ massivemailing:
           type: FILE
           userdescription: Excel con los cups
 
+    reqadq:
+        script: python SOME_SRC/patchscripts/Peticions/peticio_lectures.py {nmsgs} 
+        title: Petició d'autolectures
+        description: Petició d'autolectures (5 mesos sense lectures reals) 
+        parameters:
+          nmsgs:
+            userdescription: Número de missatges a enviar 
 test:
   description: scripts de test
   scripts:
