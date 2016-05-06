@@ -162,7 +162,7 @@ admin:
   description: Administraci
   scripts:
     municipaltax:
-      script: SOME_SRC/patchscripts/Taxes/municipaltax.py {file} {start_date} {end_date} {filetype}
+      script: python SOME_SRC/patchscripts/Taxes/municipaltax.py {file} {start_date} {end_date} {filetype}
       title: Generació fitxers agrupats impost municipal 1.5%
       description:
       parameters:
