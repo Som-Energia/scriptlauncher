@@ -170,9 +170,9 @@ admin:
           type: FILE
           userdescription: CSV dades municipi
         start_date:
-          userdescription: data inici
+          userdescription: data inici (ex. 2015-01-01)
         end_date:
-          userdescription: data final
+          userdescription: data final (ex. 2015-03-31)
         filetype:
           userdescription: format sortida (xml|csv)
 
