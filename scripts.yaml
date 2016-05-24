@@ -18,7 +18,7 @@ measurefixing:
 
     canvicomptadors:
       script: SOME_SRC/invoice-janitor/measurefixing/rectificar_lectures_canvi_comptador.py
-      tittle: Canvi de comptadors
+      title: Canvi de comptadors
       description: Gestiona els canvi de comptadors que no han estat informant i hem seguit facturant-los amb estimades fetes per Som Energia. Informa per pantalla els errors que hi han en el rpocés pe rtla de que es puguin solucionar per temàtica i anar veient quines es poden automatitzar.
 
     errorsprincipals:
@@ -136,27 +136,29 @@ gestiocontractes:
         script: python SOME_SRC/patchscripts/Informacio/switching_qc.py
         title: Quadre de control Gestió de contractes
         description: Aquest quadre de control permet veure la situació dels processos. Veiem si tenim endarreriments en alguns dels passos del cas
-
-massivemailing:
-  description: Gestió de contractes. Petició de renovar Butlletins i verficacions de CUPS
-  scripts:
-    cupstoemailb:
-      script: SOME_SRC/cups2email/cups2email_lang_b.py {file}
-      title: Email validació de instalació a partir dels CUPS facilitats per la distribuidora
-      description: 
-      parameters:
-        file:
-          type: FILE
-          userdescription: Excel con los cups
-    
-    cupstoemaila:
-      script: SOME_SRC/cups2email/cups2email_lang_a.py {file}
-      title: Email petició documentació a partir dels CUPS facilitats per la distribuidora
-      description: 
-      parameters:
-        file:
-          type: FILE
-          userdescription: Excel con los cups
+      quadrecontrol3:
+        script: python SOME_SRC/patchscripts/Informacio/tres_qc.py {date}
+        title: Quadre de control de tarifa 3.0A
+        description: Aquest quadre de control està en construcció. Potser hi ha funcionalitats que s'haurien de tractar a fora d'aquest quadre. S'hi ha de treballar una mica més.
+        parameters:
+          date:
+            userdescription: Introdueix la data dels des dels quals vols veure els nous contractes amb el format 'YYYY-mm-dd'
+      cupstoemailb:
+        script: SOME_SRC/cups2email/cups2email_lang_b.py {file}
+        title: Email validació de instalació a partir dels CUPS facilitats per la distribuidora
+        description: 
+        parameters:
+          file:
+            type: FILE
+            userdescription: Excel con los cups
+      cupstoemaila:
+        script: SOME_SRC/cups2email/cups2email_lang_a.py {file}
+        title: Email petició documentació a partir dels CUPS facilitats per la distribuidora
+        description: 
+        parameters:
+          file:
+            type: FILE
+            userdescription: Excel con los cups
 
 admin:
   description: Administraci
