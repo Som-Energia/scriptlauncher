@@ -85,12 +85,9 @@ invoicefixing:
       title: Corregir errors extra line
       description: 
     report0lines0days:
-      script: SOME_SRC/invoice-janitor/report_0days_0kWh.py {lot}
+      script: SOME_SRC/invoice-janitor/report_0days_0kWh.py
       title: Factures 0days 0lines
       description: 
-      parameters:
-        lot:
-          userdescription: Introdueix el lot a procesar amb el format "mm/yyyy" ej:03/2016
     fixrefundinvoice:
       script:
         - SOME_SRC/invoice-janitor/invoicefixing/fix_refund_invoice.py
