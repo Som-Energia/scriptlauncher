@@ -183,11 +183,11 @@ generation:
       script:
       - python
       - -c
-      - columnes='{columnes}';print';'.join(x.replace(',','.')for x in columnes.split())
+      - celles='{celles}'; print ';'.join(x.replace(',', '.') for x in celles.split())
       description: Formateja arxius de previsió
       parameters:
-        columnes:
-          userdescription: Enganxa les dades de l'Excel
+        celles:
+          userdescription: Enganxa les celles de l'Excel >
 
 test:
   description: scripts de test
