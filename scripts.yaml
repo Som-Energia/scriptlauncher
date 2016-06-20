@@ -77,9 +77,6 @@ invoicefixing:
       script: SOME_SRC/invoice-janitor/Fact_impF1_data_modificacio_contractual.py -d {date}
       title: Corregir errors data de modificació contractual 
       description:
-      parameters:
-        date:
-          userdescription: Introdueix la data a partir de la qual fer la cerca de factures amb errors amb el format 'YYYY-mm-dd' 
     fixextraline:  
       script: SOME_SRC/invoice-janitor/fix_extra_line.py
       title: Corregir errors extra line
