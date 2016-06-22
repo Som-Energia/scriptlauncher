@@ -191,7 +191,7 @@ validation:
   scripts:
     checkiban:
       title: Check IBAN
-      scripts: python SOME_SRC/somenergia-api-validators/check_iban.py {iban}
+      script: python SOME_SRC/somenergia-api-validators/check_iban.py {iban}
       parameters:
         iban:
           userdescription: IBAN code
