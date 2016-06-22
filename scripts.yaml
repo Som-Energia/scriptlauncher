@@ -186,6 +186,34 @@ generation:
         celles:
           userdescription: Enganxa les celles de l'Excel >
 
+validation:
+  description: Validació de codis
+  scripts:
+    checkiban:
+      title: Check IBAN
+      scripts: python SOME_SRC/somenergia-api-validators/check_iban.py {iban}
+      parameters:
+        iban:
+          userdescription: IBAN code
+    checkvat:
+      title: Check DNI/NIF
+      scripts: python SOME_SRC/somenergia-api-validators/check_vat.py {vat}
+      parameters:
+        vat:
+          userdescription: DNI/NIF
+    checkcups:
+      title: Check CUPS
+      scripts: python SOME_SRC/somenergia-api-validators/check_cups.py {cups}
+      parameters:
+        cups:
+          userdescription: CUPS
+    checkcnae:
+      title: Check CNAE
+      scripts: python SOME_SRC/somenergia-api-validators/check_cnae.py {cups}
+      parameters:
+        cnae:
+          userdescription: CNAE
+
 test:
   description: scripts de test
   scripts:
