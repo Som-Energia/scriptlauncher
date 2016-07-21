@@ -25,10 +25,10 @@
     {% for tag,values in items %}
         $("#{{tag}}-link").click(function(){
             if ($("#{{tag}}").css("display")=="none"){
-                $("#{{tag}}").show("slow");
+                $("#{{tag}}").show("fast");
             }
             else {
-                $("#{{tag}}").hide("slow");
+                $("#{{tag}}").hide("fast");
             }
         }
         );
