@@ -9,6 +9,7 @@ import deansi
 import shlex
 import json
 import os
+import sys
 from datetime import datetime
 from werkzeug import secure_filename
 
@@ -57,7 +58,9 @@ def flash_errors(form):
 
 def config():
     if config.data is None or debug is True:
-        config.data = ns.load('scripts.yaml')
+        config.data = ns()
+        for configfile in sys.argv[1:] or ['scripts.yaml']:
+            config.data.update(ns.load(configfile))
     return config.data
 config.data = None
 
@@ -71,11 +74,9 @@ def configScripts():
 @requires_auth
 def index():
     scripts = config()
-    forms={}
-    w=file("/var/connectivity").read().strip()
     return render_template('index_template.html',
         items=scripts.items(),
-        gdrive=w)
+        )
 
 @app.route('/upload', methods=('GET','POST'))
 @requires_auth
@@ -157,4 +158,8 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rd'
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', processes=8)
+
+
+
+
 
