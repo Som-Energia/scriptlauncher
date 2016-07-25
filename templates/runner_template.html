@@ -29,7 +29,9 @@
             display: none;
             color: red;
         }
-
+        .downloading_file {
+            display: none;
+        }
         .loading span {
           line-height: 32px;
           margin-left: 12px;
@@ -90,7 +92,7 @@
     {% endif %}
     <form name="runner" id="runner">
         {% if parameters is defined %}
-            {% for paramname,parameter in parameters.items() if parameter.type != 'FILE' %}
+            {% for paramname,parameter in parameters.items() if parameter.type != 'FILE' and parameter.type != 'FILEDOWN'%}
                 <div><label for="{{paramname}}" class="param_name">{{parameter.userdescription}}</label><input name="{{paramname}}"/></div>
             {% endfor %}
         {% endif %}
@@ -114,6 +116,7 @@
     <div id="result" class="ansi_terminal"></div>
     <div id="index-link" class="links"><a href="/">Index</a></div>
     Return code:<div id="return-code" class="return_code"></div>
+    <div id="download-div" class="downloading_file"><a id="download-link" href="">Download file</a></div>
 <script type="text/javascript">
 $(document).ready(function(){
     console.log("defining");
@@ -147,14 +150,18 @@ $(document).ready(function(){
              function(data) {
                  console.log("Success");
                  var response= jQuery.parseJSON(data);
+                 console.log(response.output_file);
                  $("#result").html(response.response);
                  $("#return-code").html(response.return_code);
                  if (response.return_code!=0) {
                      $("#result").css("border-color","#C80000");
                  }
                  $.loader.close();
+                 if (response.output_file!=false) {
+                     $("#download-div").css("display","block");
+                     $("#download-link").attr("href","/download/"+response.output_file);
                  }
-             );
+             });
         e.preventDefault();
     });
     {% if parameters is defined %}

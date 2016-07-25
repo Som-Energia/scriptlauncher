@@ -31,6 +31,17 @@ test:
         param3:
           type: FILE
 
+    test_filedownload:
+      title: 'Example: Downloading file'
+      description: This script download file
+      script: 
+        - /bin/tar 
+        - cvfz
+        - "{output1}"
+        - scriptlauncher.py
+      parameters:
+        output1:
+          type: FILEDOWN
 
     pythonExample:
       title: Reverse

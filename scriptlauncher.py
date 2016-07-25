@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from flask import Flask, request, Response, render_template, redirect, abort, flash, request,jsonify, session
+from flask import send_file
 from yamlns import namespace as ns
 from ooop import OOOP
 from collections import OrderedDict
@@ -90,6 +91,11 @@ def upload():
             file.save(filename_path)
             return jsonify({"success":True})
 
+@app.route('/download/<path:filename>')
+def download(filename):
+    filename_path = os.path.join(configdb.download_folder, filename)
+    return send_file(filename_path,attachment_filename=filename)
+
 @app.route('/runner/<cmd>')
 @requires_auth
 def runner(cmd):
@@ -108,11 +114,17 @@ def execute(scriptname):
     scripts = configScripts()
     parameters = ns(request.form.items())
     params_list = []
+    output_file = False
     if 'parameters' in scripts[scriptname]:
         for parm_name,parm_data in scripts[scriptname]['parameters'].items():
             if parm_data.get('type', None) ==  'FILE':
                 filename=os.path.join(configdb.upload_folder,session[parm_name])
                 parameters[parm_name] = filename
+            elif parm_data.get('type', None) == 'FILEDOWN':
+                filename=os.path.join(configdb.download_folder,parm_name)
+                parameters[parm_name] = filename
+                output_file = parm_name
+                print parm_name, filename
             if not parameters.get(parm_name, None) and scripts[scriptname]['parameters'][parm_name].get('default',None):
                 parameters[parm_name] = scripts[scriptname]['parameters'][parm_name]['default']
     script = scripts[scriptname].script
@@ -135,7 +147,10 @@ def execute(scriptname):
         output_decoded=output.decode('utf-8')
     except UnicodeDecodeError:
         output_decoded=output.decode('latin-1')
+    #if output_file:
+    #    return redirect("/download/{}".format(output_file))
     return json.dumps(dict(
+        output_file=output_file,
         return_code=return_code,
         response=deansi.deansi(output_decoded),
         commandline=commandline,
