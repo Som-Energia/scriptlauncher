@@ -31,8 +31,8 @@ test:
         param3:
           type: FILE
 
-    test_filedownload:
-      title: 'Example: Downloading file'
+    test_filedownload_list:
+      title: 'Example: Downloading file (list)'
       description: This script download file
       script: 
         - /bin/tar 
@@ -42,6 +42,16 @@ test:
       parameters:
         output1:
           type: FILEDOWN
+          extension: tgz
+
+    test_filedownload:
+      title: 'Example: Downloading file (no list)'
+      description: This script download file from a bash command
+      script: cp scriptlauncher.py {scriptlauncher2}
+      parameters:
+        scriptlauncher2:
+          type: FILEDOWN
+          extension: py
 
     pythonExample:
       title: Reverse

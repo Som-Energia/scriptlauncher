@@ -71,6 +71,16 @@ def configScripts():
         scripts.update(category.scripts)
     return scripts
 
+def parseDownloadFileParm(parm,script):
+    parmExtension=parm+"."+script.parameters[parm].extension
+    if script.islist:
+        for n,listElem in enumerate(script.script):
+            if parm in listElem:
+                script.script[n] = listElem.replace(parm,parmExtension)
+    else:
+        script.script=script.script.replace(parm,parmExtension)
+    return script
+
 @app.route('/', methods=('GET', 'POST'))
 @requires_auth
 def index():
@@ -102,6 +112,12 @@ def runner(cmd):
     scripts = configScripts()
     script=scripts[cmd]
     script.islist = type(script.script) is list
+    if 'parameters' in script:
+        for parm in script.parameters:
+            if (script.parameters[parm].type
+                == "FILEDOWN"):
+                script=parseDownloadFileParm(
+                    parm,script)
     return render_template(
         'runner_template.html',
         name=cmd,
@@ -124,6 +140,9 @@ def execute(scriptname):
                 filename=os.path.join(configdb.download_folder,parm_name)
                 parameters[parm_name] = filename
                 output_file = parm_name
+                extension = scripts[scriptname]['parameters'][parm_name].get('extension','bin')
+                parameters[parm_name]+="."+extension
+                output_file+="."+extension
                 print parm_name, filename
             if not parameters.get(parm_name, None) and scripts[scriptname]['parameters'][parm_name].get('default',None):
                 parameters[parm_name] = scripts[scriptname]['parameters'][parm_name]['default']
