@@ -13,7 +13,7 @@ import os
 import sys
 from datetime import datetime
 from werkzeug import secure_filename
-
+from tempfile import _get_candidate_names as tmpfile
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -95,7 +95,7 @@ def upload():
     if request.method == 'POST':
         file = request.files['file']
         parmname=request.form['filename']
-        session[parmname]=secure_filename(file.filename)    
+        session[parmname]=next(tmpfile())
         if file:
             filename_path = os.path.join(configdb.upload_folder, session[parmname])
             file.save(filename_path)
@@ -143,7 +143,6 @@ def execute(scriptname):
                 extension = scripts[scriptname]['parameters'][parm_name].get('extension','bin')
                 parameters[parm_name]+="."+extension
                 output_file+="."+extension
-                print parm_name, filename
             if not parameters.get(parm_name, None) and scripts[scriptname]['parameters'][parm_name].get('default',None):
                 parameters[parm_name] = scripts[scriptname]['parameters'][parm_name]['default']
     script = scripts[scriptname].script
@@ -154,7 +153,6 @@ def execute(scriptname):
         for piece in script
         ]
     commandline = [cmd.replace('SOME_SRC',configdb.prefix) for cmd in commandline]
-    print commandline
     return_code=0
 
     try:
