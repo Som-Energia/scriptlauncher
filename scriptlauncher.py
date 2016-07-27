@@ -31,6 +31,15 @@ def requires_auth(f):
         return f(*args, **kwd)
     return decorated
 
+def clean_cache():
+    def rm_dircontents(top):
+        for root, dirs, files in os.walk(top, topdown=False):
+            for name in files:
+                #print "I would delete "+os.path.join(root,name)
+                os.remove(os.path.join(root, name))
+    rm_dircontents(configdb.download_folder)
+    rm_dircontents(configdb.upload_folder)
+
 def authenticate():
     """Sends a 401 response that enables basic auth"""
     return Response(
@@ -101,11 +110,17 @@ def upload():
             file.save(filename_path)
             return jsonify({"success":True})
 
-@app.route('/download/<path:filename>')
-def download(filename):
-    filename_path = os.path.join(configdb.download_folder, filename)
-    return send_file(filename_path,attachment_filename=filename)
-
+@app.route('/download/<scriptname>/<path:param_name>')
+def download(scriptname,param_name):
+    scripts = configScripts()
+    filename_path = os.path.join(configdb.download_folder, session[param_name])
+    filename = param_name
+    extension = scripts[scriptname]['parameters'][param_name].get('extension','bin')
+    filename+="."+extension
+    try:
+        return send_file(filename_path,attachment_filename=filename,as_attachment=True)
+    except IOError:
+        return render_template('not_available_file.html',script=scriptname,filename=filename)
 @app.route('/runner/<cmd>')
 @requires_auth
 def runner(cmd):
@@ -137,12 +152,10 @@ def execute(scriptname):
                 filename=os.path.join(configdb.upload_folder,session[parm_name])
                 parameters[parm_name] = filename
             elif parm_data.get('type', None) == 'FILEDOWN':
-                filename=os.path.join(configdb.download_folder,parm_name)
+                session[parm_name]=next(tmpfile())
+                filename=os.path.join(configdb.download_folder,session[parm_name])
                 parameters[parm_name] = filename
                 output_file = parm_name
-                extension = scripts[scriptname]['parameters'][parm_name].get('extension','bin')
-                parameters[parm_name]+="."+extension
-                output_file+="."+extension
             if not parameters.get(parm_name, None) and scripts[scriptname]['parameters'][parm_name].get('default',None):
                 parameters[parm_name] = scripts[scriptname]['parameters'][parm_name]['default']
     script = scripts[scriptname].script
@@ -164,9 +177,8 @@ def execute(scriptname):
         output_decoded=output.decode('utf-8')
     except UnicodeDecodeError:
         output_decoded=output.decode('latin-1')
-    #if output_file:
-    #    return redirect("/download/{}".format(output_file))
     return json.dumps(dict(
+        script_name=scriptname,
         output_file=output_file,
         return_code=return_code,
         response=deansi.deansi(output_decoded),
@@ -189,6 +201,7 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rd'
 
 
 if __name__ == '__main__':
+    clean_cache()
     app.run(debug=True, host='0.0.0.0', processes=8)
 
 

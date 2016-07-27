@@ -159,7 +159,7 @@ $(document).ready(function(){
                  $.loader.close();
                  if (response.output_file!=false) {
                      $("#download-div").css("display","block");
-                     $("#download-link").attr("href","/download/"+response.output_file);
+                     $("#download-link").attr("href","/download/"+response.script_name+"/"+response.output_file);
                  }
              });
         e.preventDefault();
