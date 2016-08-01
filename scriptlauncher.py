@@ -129,7 +129,7 @@ def runner(cmd):
     script.islist = type(script.script) is list
     if 'parameters' in script:
         for parm in script.parameters:
-            if (script.parameters[parm].type
+            if ("type" in script.parameters[parm] and script.parameters[parm].type
                 == "FILEDOWN"):
                 script=parseDownloadFileParm(
                     parm,script)
