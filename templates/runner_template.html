@@ -115,8 +115,8 @@
     {% endif %}
     <div id="result-title">Sortida:</div>
     <div id="result" class="ansi_terminal"></div>
-    <div id="index-link" class="links"><a href="/">Index</a></div>
-    Return code:<div id="return-code" class="return_code"></div>
+    <div id="return-code" class="return_code"></div>
+    <div id="index-link" class="links"><a href="/">Torna a la llista d'scripts</a></div>
     <div id="download-div" class="downloading_file"><a id="download-link" href="">Download file</a></div>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -153,9 +153,13 @@ $(document).ready(function(){
                  var response= jQuery.parseJSON(data);
                  console.log(response.output_file);
                  $("#result").html(response.response);
-                 $("#return-code").html(response.return_code);
                  if (response.return_code!=0) {
+                     $("#return-code").html('Resultado: Fallo ('+response.return_code+')');
                      $("#result").css("border-color","#C80000");
+                 }
+                 else {
+                     $("#return-code").html('Resultado: Ok ('+response.return_code+')');
+                     $("#result").css("border-color","#00C800");
                  }
                  $.loader.close();
                  if (response.output_file!=false) {

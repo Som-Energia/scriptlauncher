@@ -179,10 +179,16 @@ def execute(scriptname):
     except subprocess.CalledProcessError as e:
         output=e.output
         return_code=e.returncode
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        output='\033[31;1m'+traceback.format_exc()
+        return_code=-1
     try:
         output_decoded=output.decode('utf-8')
     except UnicodeDecodeError:
         output_decoded=output.decode('latin-1')
+
     return json.dumps(dict(
         script_name=scriptname,
         output_file=output_file,

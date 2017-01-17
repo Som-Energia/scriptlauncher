@@ -75,3 +75,9 @@ test:
           description: Status code
           default: -1
 
+    unexistingCommand:
+      title: Unexisting command
+      description: Handling errors before even running the command
+      script: acommandnotinyoursystem
+
+
