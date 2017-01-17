@@ -23,8 +23,9 @@
         .param_name {
             padding: 1ex;
         }
-        .loading { margin: auto; }
-        
+        .loading {
+            margin: auto;
+        }
         .uploading_file {
             display: none;
             color: red;
@@ -79,7 +80,7 @@
         {% for paramname,parameter in parameters.items() if parameter.type == 'FILE' %}
             <form id="upload-file-{{paramname}}" method="post" enctype="multipart/form-data">
                 <fieldset>
-                    <label for="{{paramname}}" class="parm_name">{{parameter.userdescription}}</label>
+                    <label for="{{paramname}}" class="parm_name">{{parameter.description}}</label>
                     <input type=file name='file'>
                     <input id="upload-file-hidden-{{paramname}}" type="hidden" name="filename" value="{{paramname}}"></input>
                 </fieldset>
@@ -93,7 +94,7 @@
     <form name="runner" id="runner">
         {% if parameters is defined %}
             {% for paramname,parameter in parameters.items() if parameter.type != 'FILE' and parameter.type != 'FILEDOWN'%}
-                <div><label for="{{paramname}}" class="param_name">{{parameter.userdescription}}</label><input name="{{paramname}}"/></div>
+                <div><label for="{{paramname}}" class="param_name">{{parameter.description}}</label><input name="{{paramname}}"/></div>
             {% endfor %}
         {% endif %}
         <input type="submit" value="Ejecutar"/>

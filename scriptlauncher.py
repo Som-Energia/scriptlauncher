@@ -90,6 +90,7 @@ def parseDownloadFileParm(parm,script):
         script.script=script.script.replace(parm,parmExtension)
     return script
 
+
 @app.route('/', methods=('GET', 'POST'))
 @requires_auth
 def index():
@@ -97,6 +98,7 @@ def index():
     return render_template('index_template.html',
         items=scripts.items(),
         )
+
 
 @app.route('/upload', methods=('GET','POST'))
 @requires_auth
@@ -110,6 +112,7 @@ def upload():
             file.save(filename_path)
             return jsonify({"success":True})
 
+
 @app.route('/download/<scriptname>/<path:param_name>')
 def download(scriptname,param_name):
     scripts = configScripts()
@@ -121,6 +124,8 @@ def download(scriptname,param_name):
         return send_file(filename_path,attachment_filename=filename,as_attachment=True)
     except IOError:
         return render_template('not_available_file.html',script=scriptname,filename=filename)
+
+
 @app.route('/runner/<cmd>')
 @requires_auth
 def runner(cmd):
@@ -139,6 +144,7 @@ def runner(cmd):
         style=deansi.styleSheet(),
         **script
         )
+
 
 def execute(scriptname):
     import os
@@ -196,7 +202,7 @@ def script_without_parms(scriptname):
 def badRequest(e):
     return render_template('400.html')
 
-
+# TODO: Move this to configuration!!!
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rd'
 
 

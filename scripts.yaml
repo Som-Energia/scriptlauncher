@@ -15,7 +15,7 @@ test:
       script: /bin/grep -R "{expr}" "{file}"
       parameters:
         expr:
-          userdescription: Expressió regular
+          description: Expressió regular
         file:
           type: FILE
 
@@ -62,5 +62,16 @@ test:
       - phrase='{phrase}'; print ' '.join(reversed(phrase.split()))
       parameters:
         phrase:
-          userdescription: Phrase to reverse
+          description: Phrase to reverse
+    failing:
+      title: Failing script
+      description: Test failures
+      script:
+      - python
+      - -c
+      - import sys; sys.stderr.write("Error message"); sys.exit({statusCode})
+      parameters:
+        statusCode:
+          description: Status code
+          default: -1
 
