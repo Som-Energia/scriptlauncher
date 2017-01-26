@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from flask import Flask, request, Response, render_template, redirect, abort, flash, request,jsonify, session
 from flask import send_file
 from yamlns import namespace as ns
@@ -191,7 +193,6 @@ def execute(scriptname):
         output_decoded=output.decode('latin-1')
 
     if 'send' in entry:
-        import emili
         print "Sending"
         subst = ns(
             title = entry.title,
@@ -203,7 +204,7 @@ def execute(scriptname):
         if 'subject' in entry.send:
             subject = entry.send.subject
         else:
-            subject = "[Web Script] {OKKO} {title} {today:%Y-%m-%d}" 
+            subject = u"[Web Script] {OKKO} {title} {today:%Y-%m-%d}" 
         subject = subject.format(**subst)
 
         to= [
@@ -212,15 +213,17 @@ def execute(scriptname):
             if mail.format(**subst).strip()
         ]
 
-        emili.sendMail(
-            sender=configdb.smtp['user'],
-            to=to,
-            subject=subject,
-            ansi=output_decoded,
-            config='configdb.py', # TODO: pass the object instead
-            stylesheets = [],
-            verbose=True
-        )
+        if to:
+            import emili
+            emili.sendMail(
+                sender=configdb.smtp['user'],
+                to=to,
+                subject=subject,
+                ansi=output_decoded,
+                config='configdb.py', # TODO: pass the object instead
+                stylesheets = [],
+                verbose=True
+            )
 
     return json.dumps(dict(
         script_name=scriptname,
