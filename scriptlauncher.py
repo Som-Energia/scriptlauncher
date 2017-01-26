@@ -193,7 +193,6 @@ def execute(scriptname):
         output_decoded=output.decode('latin-1')
 
     if 'send' in entry:
-        print "Sending"
         subst = ns(
             title = entry.title,
             today = datetime.today(),
