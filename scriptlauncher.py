@@ -152,8 +152,9 @@ def execute(scriptname):
     parameters = ns(request.form.items())
     params_list = []
     output_file = False
-    if 'parameters' in scripts[scriptname]:
-        for parm_name,parm_data in scripts[scriptname]['parameters'].items():
+    entry = scripts[scriptname]
+    if 'parameters' in entry:
+        for parm_name,parm_data in entry['parameters'].items():
             if parm_data.get('type', None) ==  'FILE':
                 filename=os.path.join(configdb.upload_folder,session[parm_name])
                 parameters[parm_name] = filename
@@ -162,9 +163,9 @@ def execute(scriptname):
                 filename=os.path.join(configdb.download_folder,session[parm_name])
                 parameters[parm_name] = filename
                 output_file = parm_name
-            if not parameters.get(parm_name, None) and scripts[scriptname]['parameters'][parm_name].get('default',None):
-                parameters[parm_name] = scripts[scriptname]['parameters'][parm_name]['default']
-    script = scripts[scriptname].script
+            if not parameters.get(parm_name, None) and entry['parameters'][parm_name].get('default',None):
+                parameters[parm_name] = entry['parameters'][parm_name]['default']
+    script = entry.script
     if type(script) is not list:
         script = shlex.split(script)
     commandline = [
@@ -188,6 +189,38 @@ def execute(scriptname):
         output_decoded=output.decode('utf-8')
     except UnicodeDecodeError:
         output_decoded=output.decode('latin-1')
+
+    if 'send' in entry:
+        import emili
+        print "Sending"
+        subst = ns(
+            title = entry.title,
+            today = datetime.today(),
+            OKKO = '' if return_code == 0 else "ERROR",
+            **parameters
+            )
+
+        if 'subject' in entry.send:
+            subject = entry.send.subject
+        else:
+            subject = "[Web Script] {OKKO} {title} {today:%Y-%m-%d}" 
+        subject = subject.format(**subst)
+
+        to= [
+            mail.format(**subst)
+            for mail in entry.send.to
+            if mail.format(**subst).strip()
+        ]
+
+        emili.sendMail(
+            sender=configdb.smtp['user'],
+            to=to,
+            subject=subject,
+            ansi=output_decoded,
+            config='configdb.py', # TODO: pass the object instead
+            stylesheets = [],
+            verbose=True
+        )
 
     return json.dumps(dict(
         script_name=scriptname,

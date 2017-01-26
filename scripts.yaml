@@ -80,4 +80,15 @@ test:
       description: Handling errors before even running the command
       script: acommandnotinyoursystem
 
+    sendingMail:
+      title: How to send mails
+      description: Sending mails with the script output
+      script: bash -c "echo Hola mon; echo caca >&2; exit 4"
+      send:
+        subject: TEST {title}
+        to:
+        - '{mail}'
+      parameters:
+        mail:
+          description: Introdueix el correu electrònic
 
