@@ -156,7 +156,7 @@ def execute(scriptname):
     output_file = False
     entry = scripts[scriptname]
     if 'parameters' in entry:
-        for parm_name,parm_data in entry['parameters'].items():
+        for parm_name, parm_data in entry['parameters'].items():
             if parm_data.get('type', None) ==  'FILE':
                 filename=os.path.join(configdb.upload_folder,session[parm_name])
                 parameters[parm_name] = filename
@@ -165,8 +165,8 @@ def execute(scriptname):
                 filename=os.path.join(configdb.download_folder,session[parm_name])
                 parameters[parm_name] = filename
                 output_file = parm_name
-            if not parameters.get(parm_name, None) and entry['parameters'][parm_name].get('default',None):
-                parameters[parm_name] = entry['parameters'][parm_name]['default']
+            if not parameters.get(parm_name, None) and param_data.get('default',None):
+                parameters[parm_name] = param_data.default
     script = entry.script
     if type(script) is not list:
         script = shlex.split(script)
