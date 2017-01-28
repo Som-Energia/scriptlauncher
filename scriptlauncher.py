@@ -155,19 +155,18 @@ def execute(scriptname):
     params_list = []
     output_file = False
     entry = scripts[scriptname]
-    if 'parameters' in entry:
-        for name, definition in entry['parameters'].items():
-			ptype = definition.get('type',None)
-            if ptype ==  'FILE':
-                filename=os.path.join(configdb.upload_folder,session[name])
-                parameters[name] = filename
-            elif ptype == 'FILEDOWN':
-                session[name]=next(tmpfile())
-                filename=os.path.join(configdb.download_folder,session[name])
-                parameters[name] = filename
-                output_file = name
-            if not parameters.get(name, None) and definition.get('default',None):
-                parameters[name] = definition.default
+    for name, definition in entry.get('parameters',ns()).items():
+        ptype = definition.get('type',None)
+        if ptype ==  'FILE':
+            filename=os.path.join(configdb.upload_folder,session[name])
+            parameters[name] = filename
+        elif ptype == 'FILEDOWN':
+            session[name]=next(tmpfile())
+            filename=os.path.join(configdb.download_folder,session[name])
+            parameters[name] = filename
+            output_file = name
+        if not parameters.get(name, None) and definition.get('default',None):
+            parameters[name] = definition.default
     script = entry.script
     if type(script) is not list:
         script = shlex.split(script)
