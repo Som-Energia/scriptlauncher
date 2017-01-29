@@ -19,7 +19,6 @@ from tempfile import _get_candidate_names as tmpfile
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-filename=''
 debug = True
 import configdb
 
@@ -74,6 +73,7 @@ def config():
         for configfile in sys.argv[1:] or ['scripts.yaml']:
             config.data.update(ns.load(configfile))
     return config.data
+
 config.data = None
 
 def configScripts():
