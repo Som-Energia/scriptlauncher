@@ -102,17 +102,16 @@ def index():
         )
 
 
-@app.route('/upload', methods=('GET','POST'))
+@app.route('/upload', methods=('POST',))
 @requires_auth
 def upload():
-    if request.method == 'POST':
-        file = request.files['file']
-        parmname=request.form['filename']
-        session[parmname]=next(tmpfile())
-        if file:
-            filename_path = os.path.join(configdb.upload_folder, session[parmname])
-            file.save(filename_path)
-            return jsonify({"success":True})
+    file = request.files['file']
+    parmname=request.form['filename']
+    session[parmname]=next(tmpfile())
+    if file:
+        filename_path = os.path.join(configdb.upload_folder, session[parmname])
+        file.save(filename_path)
+        return jsonify({"success":True})
 
 
 @app.route('/download/<scriptname>/<path:param_name>')
