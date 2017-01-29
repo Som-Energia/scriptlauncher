@@ -167,18 +167,22 @@ def execute(scriptname):
             output_file = name
         if not parameters.get(name, None) and definition.get('default',None):
             parameters[name] = definition.default
-    script = entry.script
-    if type(script) is not list:
-        script = shlex.split(script)
-    commandline = [
+
+    command = entry.script
+    if type(command) is not list:
+        command = shlex.split(command)
+    command = [
         piece.format(**parameters)
-        for piece in script
+        for piece in command
         ]
-    commandline = [cmd.replace('SOME_SRC',configdb.prefix) for cmd in commandline]
+    command = [
+        piece.replace('SOME_SRC',configdb.prefix)
+        for piece in command
+        ]
     return_code=0
 
     try:
-        output=subprocess.check_output(commandline,stderr=subprocess.STDOUT)
+        output=subprocess.check_output(command,stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
         output=e.output
         return_code=e.returncode
@@ -229,7 +233,7 @@ def execute(scriptname):
         output_file=output_file,
         return_code=return_code,
         response=deansi.deansi(output_decoded),
-        commandline=commandline,
+        commandline=command,
         ))
 
 
