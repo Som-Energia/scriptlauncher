@@ -44,8 +44,9 @@ def clean_cache():
 def authenticate():
     """Sends a 401 response that enables basic auth"""
     return Response(
-    "No ha estat possible validar l'usuari.\n", 401,
-    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+        "No ha estat possible validar l'usuari.\n", 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'}
+        )
 
 def check_auth(username, password):
     """This function is called to check if a username /
