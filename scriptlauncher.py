@@ -1,8 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from flask import Flask, request, Response, render_template, redirect, abort, flash, request,jsonify, session
-from flask import send_file
+from flask import (
+    Flask,
+    request,
+    Response,
+    render_template,
+    flash,
+    jsonify,
+    session,
+    send_file,
+)
 from yamlns import namespace as ns
 from ooop import OOOP
 from collections import OrderedDict
@@ -34,15 +42,6 @@ def requires_auth(f):
         return f(*args, **kwd)
     return decorated
 
-def clean_cache():
-    def rm_dircontents(top):
-        for root, dirs, files in os.walk(top, topdown=False):
-            for name in files:
-                #print "I would delete "+os.path.join(root,name)
-                os.remove(os.path.join(root, name))
-    rm_dircontents(configdb.download_folder)
-    rm_dircontents(configdb.upload_folder)
-
 def authenticate():
     """Sends a 401 response that enables basic auth"""
     return Response(
@@ -54,6 +53,8 @@ def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
+    if configdb.get('ignoreauth',False):
+        return True
     configdb.ooop['user'] = username
     configdb.ooop['pwd'] = password
     try:
@@ -116,7 +117,6 @@ def upload():
     session[parmname]=tmpfile.name
     if afile:
         afile.save(tmpfile.name)
-        print tmpfile.name
         return jsonify({"success":True})
 
 @app.route('/download/<scriptname>/<path:param_name>')
@@ -255,7 +255,6 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rd'
 
 
 if __name__ == '__main__':
-    clean_cache()
     app.run(debug=True, host='0.0.0.0', processes=8)
 
 
