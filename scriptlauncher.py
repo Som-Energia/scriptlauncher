@@ -162,7 +162,7 @@ def execute(scriptname):
         if ptype ==  'FILE':
             parameters[name] = session[name]
         elif ptype == 'FILEDOWN':
-            extension = os.path.splitext(name)[1]
+            extension = definition.get('extension','bin')
             tmpfile = tempfile.NamedTemporaryFile(suffix=extension, delete=False)
             session[name]=tmpfile.name
             parameters[name] = session[name]

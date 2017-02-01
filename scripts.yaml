@@ -1,8 +1,9 @@
 test:
   description: Testing scripts
   scripts:
+
     test_parameter:
-      title: Passing a parameter
+      title: Passing parameters
       description: >
         Tests a parameter is passed as literal.
         If empty a default value is used.
@@ -11,6 +12,33 @@ test:
         nouser:
           description: Output text
           default: "It works\n"
+
+    pythonExample:
+      title: Reverse
+      description: How to execute python code
+      script:
+      - python
+      - -c
+      - phrase='{phrase}'; print ' '.join(reversed(phrase.split()))
+      parameters:
+        phrase:
+          description: Phrase to reverse
+    failing:
+      title: Failing script
+      description: Test failures
+      script:
+      - python
+      - -c
+      - import sys; sys.stderr.write("Error message"); sys.exit({statusCode})
+      parameters:
+        statusCode:
+          description: Status code
+          default: -1
+
+    unexistingCommand:
+      title: Unexisting command
+      description: Handling errors before even running the command
+      script: acommandnotinyoursystem
 
     test_fileupload:
       title: Search in file (Single upload)
@@ -60,33 +88,6 @@ test:
         scriptlauncher2:
           type: FILEDOWN
           extension: py
-
-    pythonExample:
-      title: Reverse
-      description: How to execute python code
-      script:
-      - python
-      - -c
-      - phrase='{phrase}'; print ' '.join(reversed(phrase.split()))
-      parameters:
-        phrase:
-          description: Phrase to reverse
-    failing:
-      title: Failing script
-      description: Test failures
-      script:
-      - python
-      - -c
-      - import sys; sys.stderr.write("Error message"); sys.exit({statusCode})
-      parameters:
-        statusCode:
-          description: Status code
-          default: -1
-
-    unexistingCommand:
-      title: Unexisting command
-      description: Handling errors before even running the command
-      script: acommandnotinyoursystem
 
     sendingMail:
       title: How to send mails
