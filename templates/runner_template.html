@@ -157,8 +157,8 @@ $(document).ready(function(){
         if ( $( ".uploading_file" ).length) {
             console.log("There are uploading file class elements");
             var colorArray = $(".uploading_file").map(function () {
-                        return $(this).css("color");
-                    }).get();
+                return $(this).css("color");
+            }).get();
             for (i = 0; i < colorArray.length; i++) {
                 if ( colorArray[i]!= "rgb(0, 128, 0)"){
                     if ($( ".uploading_file" ).length == 1){
@@ -177,25 +177,33 @@ $(document).ready(function(){
             imgUrl: "{{ url_for('static', filename='loading32x32.gif') }}"
         });
         $.post(
-             "/run/{{name}}",
-             $(this).serialize(),
-             function(data) {
-                 var response= jQuery.parseJSON(data);
-                 $("#result").html(response.response);
-                 if (response.return_code!=0) {
+            "/run/{{name}}",
+            $(this).serialize(),
+            function(data) {
+                var response= jQuery.parseJSON(data);
+                $("#result").html(response.response);
+                if (response.return_code!=0) {
                      $("#return-code").html('Resultat: Falla ('+response.return_code+')');
                      $("#result").css("border-color","#C80000");
-                 }
-                 else {
+                }
+                else {
                      $("#return-code").html('Resultat: Ok ('+response.return_code+')');
                      $("#result").css("border-color","#00C800");
-                 }
-                 $.loader.close();
-                 if (response.output_file!=false) {
-                     $("#download-div").css("display","block");
-                     $("#download-link").attr("href","/download/"+response.script_name+"/"+response.output_file);
-                 }
-             });
+                }
+                $.loader.close();
+                if (response.output_file!=false) {
+                    location.href = "/download/"+response.script_name+"/"+response.output_file;
+                }
+            }).fail(function(data) {
+                $.loader.close();
+                $("#result").html(
+                    "Error inexperat de l'script launcher executant l'ordre.\n" +
+                    "Error "+ data.status +
+                    " " + data.statusError + "\n"
+                    );
+                console.log(data);
+                $("#result").css("border-color","#C80000");
+            });
         e.preventDefault();
     });
     {% if parameters is defined %}

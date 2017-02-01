@@ -122,12 +122,11 @@ def upload():
 @app.route('/download/<scriptname>/<path:param_name>')
 def download(scriptname,param_name):
     scripts = configScripts()
-    filename_path = os.path.join(configdb.download_folder, session[param_name])
     filename = param_name
     extension = scripts[scriptname]['parameters'][param_name].get('extension','bin')
     filename+="."+extension
     try:
-        return send_file(filename_path,attachment_filename=filename,as_attachment=True)
+        return send_file(session[param_name],attachment_filename=filename,as_attachment=True)
     except IOError:
         return render_template('not_available_file.html',script=scriptname,filename=filename)
 
@@ -163,9 +162,9 @@ def execute(scriptname):
         if ptype ==  'FILE':
             parameters[name] = session[name]
         elif ptype == 'FILEDOWN':
-            session[name]=next(tmpfile())
-            filename=os.path.join(configdb.download_folder,session[name])
-            parameters[name] = filename
+            tmpfile = tempfile.NamedTemporaryFile(delete=False)
+            session[name]=tmpfile.name
+            parameters[name] = session[name]
             output_file = name
         if not parameters.get(name, None) and definition.get('default',None):
             parameters[name] = definition.default
