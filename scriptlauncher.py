@@ -52,7 +52,7 @@ def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
-    if configdb.get('ignoreauth',False):
+    if configdb.scriptlauncher.get('ignoreauth',False):
         return True
     configdb.ooop['user'] = username
     configdb.ooop['pwd'] = password
@@ -112,11 +112,9 @@ def upload():
     parmname = request.form['filename']
     extension = os.path.splitext(afile.filename)[1]
     tmpfile = tempfile.NamedTemporaryFile(suffix=extension, delete=False)
-    
     session[parmname]=tmpfile.name
-
     if not afile:
-        return jsonify({"success":False})
+        return #jsonify({"success":False})
 
     afile.save(tmpfile.name)
     return jsonify({"success":True})
@@ -180,7 +178,7 @@ def execute(scriptname):
         for piece in command
         ]
     command = [
-        piece.replace('SOME_SRC',configdb.prefix)
+        piece.replace('SOME_SRC',configdb.scriptlauncher['prefix'])
         for piece in command
         ]
     return_code=0

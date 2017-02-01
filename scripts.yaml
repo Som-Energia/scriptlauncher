@@ -1,34 +1,42 @@
 test:
-  description: scripts de test
+  description: Testing scripts
   scripts:
     test_parameter:
       title: Passing a parameter
-      description: 
+      description: >
+        Tests a parameter is passed as literal.
+        If empty a default value is used.
       script: /usr/bin/printf {nouser}
       parameters:
         nouser:
+          description: Output text
           default: "It works\n"
 
     test_fileupload:
-      title: Search in file
-      description: Uploads a file and search a regular expression on it
-      script: /bin/grep -R "{expr}" "{file}"
+      title: Search in file (Single upload)
+      description: >
+        Uploads a file and search a regular expression on it
+      script: /bin/grep -R "{expr}" "{afile}"
       parameters:
         expr:
           description: Expressió regular
-        file:
+        afile:
+          description: Fitxer on cercar
           type: FILE
 
     test_multifileupload:
-      title: 'Example: Uploading fails'
+      title: Concatenate files (Multiple uploads)
       description: This script concatenate files
       script: /bin/cat {param1} {param2} {param3}
       parameters:
         param1:
+          description: Fitxer 1
           type: FILE
         param2:
+          description: Fitxer 2
           type: FILE
         param3:
+          description: Fitxer 3
           type: FILE
 
     test_filedownload_list:

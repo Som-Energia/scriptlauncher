@@ -20,6 +20,10 @@
         .return_code {
             padding: 1ex;
         }
+        .parameter {
+            margin-top: 3px;
+            margin-bottom: 3px;
+        }
         .param_name {
             padding: 1ex;
         }
@@ -29,8 +33,36 @@
         .uploading_file {
             display: none;
             color: red;
+            text-align: right;
         }
         .downloading_file {
+            display: none;
+        }
+        .uploader label,
+        input[type=submit] {
+            background-color: #7ad;
+            color: black;
+            border-radius: 4pt;
+            border: 2px outset black;
+            padding: 4px 3ex;
+            cursor: pointer;
+            display: inline-block;
+            text-shadow: 1px 1px 1px white;
+        }
+        .uploader label:hover,
+        input[type=submit]:hover {
+            text-shadow: 1px 1px 3px white;
+            background-color: #8bf;
+        }
+        .uploader label:active,
+        input[type=submit]:active {
+            border: 2px inset black;
+        }
+        .uploader {
+            display: inline-block;
+            margin: 10px;
+        }
+        .uploader input[type=file] {
             display: none;
         }
         .loading span {
@@ -77,25 +109,25 @@
 <body>
     <h1>{{title}}</h2>
     <h4>{{description}}</h4>
-    {% if parameters is defined %}
-        {% for paramname,parameter in parameters.items() if parameter.type == 'FILE' %}
-            <form id="upload-file-{{paramname}}" method="post" enctype="multipart/form-data">
-                <fieldset>
-                    <label for="{{paramname}}" class="parm_name">{{parameter.description}}</label>
-                    <input type=file name='file'>
-                    <input id="upload-file-hidden-{{paramname}}" type="hidden" name="filename" value="{{paramname}}"></input>
-                </fieldset>
-                <fieldset>
-                    <button id="upload-file-btn-{{paramname}}" class="upload-file-btn" type="button">Upload</button>
-                </fieldset>
-            </form>
-            <div id="uploading-file-{{paramname}}" class="uploading_file">Loading...</div>
-        {% endfor %}
-    {% endif %}
     <form name="runner" id="runner">
         {% if parameters is defined %}
-            {% for paramname,parameter in parameters.items() if parameter.type != 'FILE' and parameter.type != 'FILEDOWN'%}
-                <div><label for="{{paramname}}" class="param_name">{{parameter.description}}</label><input name="{{paramname}}"/></div>
+            {% for paramname,parameter in parameters.items() if parameter.type != 'FILEDOWN'%}
+                <div class='parameter'>
+                {% if parameter.type =='FILE' %}
+                      <label for="{{paramname}}" class="param_name">{{parameter.description}} [{{paramname}}]:</label>
+                      <div class='uploader'>
+                        <label>
+                          Navega...
+                          <input id="upload-file-{{paramname}}" type='file' name='{{paramname}}' />
+                        </label>
+                      <span id="uploading-filename-{{paramname}}" class="uploading_filename"><span class="placeholder">Cap arxiu seleccionat</span></span>
+                      <span id="uploading-file-{{paramname}}" class="uploading_file">Loading...</span>
+                      </div>
+                {% else %}
+                      <label for="{{paramname}}" class="param_name">{{parameter.description}} [{{paramname}}]:</label>
+                      <input name="{{paramname}}"/>
+                {% endif %}
+                </div>
             {% endfor %}
         {% endif %}
     {% if parameters is defined %}
@@ -112,7 +144,7 @@
         <div class="commandline"><tt>{{script}}</tt>
         </div>
     {% endif %}
-        <input type="submit" value="Ejecutar"/>
+        <input type="submit" value="Executar"/>
     </form>
     <div id="result-title">Sortida:</div>
     <div id="result" class="ansi_terminal"></div>
@@ -121,9 +153,7 @@
     <div id="index-link" class="links"><a href="/">Torna a la llista d'scripts</a></div>
 <script type="text/javascript">
 $(document).ready(function(){
-    console.log("defining");
     $("#runner").submit(function(e) {
-        console.log("Submiting");
         if ( $( ".uploading_file" ).length) {
             console.log("There are uploading file class elements");
             var colorArray = $(".uploading_file").map(function () {
@@ -150,9 +180,7 @@ $(document).ready(function(){
              "/run/{{name}}",
              $(this).serialize(),
              function(data) {
-                 console.log("Success");
                  var response= jQuery.parseJSON(data);
-                 console.log(response.output_file);
                  $("#result").html(response.response);
                  if (response.return_code!=0) {
                      $("#return-code").html('Resultat: Falla ('+response.return_code+')');
@@ -172,15 +200,17 @@ $(document).ready(function(){
     });
     {% if parameters is defined %}
     {% for paramname,parameter in parameters.items() if parameter.type == 'FILE' %}
-        $('#upload-file-btn-{{paramname}}').click(function() {
-            var form_data = new FormData($('#upload-file-{{paramname}}')[0]);
-            form_data.append("filename",$('#upload-file-hidden-{{paramname}}'));
+        $('#upload-file-{{paramname}}').on('change', function() {
+            var form_data = new FormData();
+            form_data.append("file",$('#upload-file-{{paramname}}')[0].files[0]);
+            form_data.append("filename","{{paramname}}");
             $("#upload-file-{{paramname}}").loader({
                 imgUrl: "{{ url_for('static', filename='loading32x32.gif') }}"
             });
-            $("#uploading-file-{{paramname}}").css("display","block");
+            $("#uploading-file-{{paramname}}").css("display","inline");
             $("#uploading-file-{{paramname}}").css("color","red");
-            $("#uploading-file-{{paramname}}").html("Loading...");
+            $("#uploading-file-{{paramname}}").html("Pujant...");
+            $("#uploading-filename-{{paramname}}").html($('#upload-file-{{paramname}}')[0].files[0].name);
             $.ajax({
                 type: 'POST',
                 url: '/upload',
@@ -190,9 +220,9 @@ $(document).ready(function(){
                 processData: false,
                 async: false,
                 success: function(data) {
-                    console.log('Success file uploading!');
+                    console.log('Success file uploading!', data);
                     $("#uploading-file-{{paramname}}").css("color","green");
-                    $("#uploading-file-{{paramname}}").html("Loaded!");
+                    $("#uploading-file-{{paramname}}").html("Pujat!");
                     $.loader.close();
                 },
             });
