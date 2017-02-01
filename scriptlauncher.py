@@ -16,6 +16,8 @@ import sys
 from datetime import datetime
 from werkzeug import secure_filename
 from tempfile import _get_candidate_names as tmpfile
+import tempfile
+
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -106,14 +108,16 @@ def index():
 @app.route('/upload', methods=('POST',))
 @requires_auth
 def upload():
-    file = request.files['file']
-    parmname=request.form['filename']
-    session[parmname]=next(tmpfile())
-    if file:
-        filename_path = os.path.join(configdb.upload_folder, session[parmname])
-        file.save(filename_path)
+    afile = request.files['file']
+    parmname = request.form['filename']
+    extension = os.path.splitext(afile.filename)[1]
+    tmpfile = tempfile.NamedTemporaryFile(suffix=extension, delete=False)
+    
+    session[parmname]=tmpfile.name
+    if afile:
+        afile.save(tmpfile.name)
+        print tmpfile.name
         return jsonify({"success":True})
-
 
 @app.route('/download/<scriptname>/<path:param_name>')
 def download(scriptname,param_name):
@@ -158,8 +162,7 @@ def execute(scriptname):
     for name, definition in entry.get('parameters',ns()).items():
         ptype = definition.get('type',None)
         if ptype ==  'FILE':
-            filename=os.path.join(configdb.upload_folder,session[name])
-            parameters[name] = filename
+            parameters[name] = session[name]
         elif ptype == 'FILEDOWN':
             session[name]=next(tmpfile())
             filename=os.path.join(configdb.download_folder,session[name])
