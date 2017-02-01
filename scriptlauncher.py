@@ -23,7 +23,6 @@ import os
 import sys
 from datetime import datetime
 from werkzeug import secure_filename
-from tempfile import _get_candidate_names as tmpfile
 import tempfile
 
 app = Flask(__name__)
@@ -115,9 +114,12 @@ def upload():
     tmpfile = tempfile.NamedTemporaryFile(suffix=extension, delete=False)
     
     session[parmname]=tmpfile.name
-    if afile:
-        afile.save(tmpfile.name)
-        return jsonify({"success":True})
+
+    if not afile:
+        return jsonify({"success":False})
+
+    afile.save(tmpfile.name)
+    return jsonify({"success":True})
 
 @app.route('/download/<scriptname>/<path:param_name>')
 def download(scriptname,param_name):
@@ -153,7 +155,6 @@ def runner(cmd):
 
 
 def execute(scriptname):
-    import os
     scripts = configScripts()
     parameters = ns(request.form.items())
     params_list = []
