@@ -172,9 +172,12 @@ def execute(scriptname):
 
     command = entry.script
     if type(command) is not list:
-        command = shlex.split(command)
+        command = [
+            piece.decode('utf8')
+            for piece in shlex.split(command.encode('utf8'))
+            ]
     command = [
-        piece.format(**parameters)
+        piece.decode('utf8').format(**parameters).encode('utf8')
         for piece in command
         ]
     command = [
