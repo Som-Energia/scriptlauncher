@@ -126,7 +126,12 @@ def download(scriptname,param_name):
     extension = scripts[scriptname]['parameters'][param_name].get('extension','bin')
     filename+="."+extension
     try:
-        return send_file(session[param_name],attachment_filename=filename,as_attachment=True)
+        return send_file(
+            session[param_name],
+            attachment_filename=filename,
+            as_attachment=True,
+            cache_timeout=-1,
+            )
     except IOError:
         return render_template('not_available_file.html',script=scriptname,filename=filename)
 
