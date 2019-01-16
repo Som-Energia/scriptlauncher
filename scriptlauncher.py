@@ -215,7 +215,7 @@ def execute(scriptname):
         if 'subject' in entry.send:
             subject = entry.send.subject
         else:
-            subject = u"[Web Script] {OKKO} {title} {today:%Y-%m-%d}" 
+            subject = u"[Web Script] {OKKO} {title} {today:%Y-%m-%d}"
         subject = subject.format(**subst)
 
         to= [
@@ -260,7 +260,7 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?Rd'
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', processes=8)
+    app.run(debug=True, host='0.0.0.0', processes=8, threaded=False)
 
 
 
