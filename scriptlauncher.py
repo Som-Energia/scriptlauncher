@@ -9,7 +9,7 @@ from flask import (
     flash,
     jsonify,
     session,
-    send_file,
+    send_from_directory,
 )
 from yamlns import namespace as ns
 from ooop import OOOP
@@ -121,19 +121,32 @@ def upload():
 
 @app.route('/download/<scriptname>/<param_name>/<filename>')
 def download(scriptname, param_name, filename=None):
+    def fileNotAvailable():
+        return render_template(
+            'not_available_file.html',
+            script=scriptname,
+            filename=param_name)
+
     scripts = configScripts()
+
+    if param_name not in scripts[scriptname]['parameters']:
+        return fileNotAvailable()
+
     parameter = scripts[scriptname].parameters[param_name]
     filename = filename or (
         param_name + '.' + parameter.get('extension', 'bin'))
+    dir=configdb.scriptlauncher.get('download_folder',None)
+
     try:
-        return send_file(
+        return send_from_directory(
+            dir,
             session[param_name],
             attachment_filename=filename,
             as_attachment=True,
-            cache_timeout=-1,
+            cache_timeout = -1,
             )
     except IOError:
-        return render_template('not_available_file.html',script=scriptname,filename=filename)
+        return fileNotAvailable()
 
 
 @app.route('/runner/<cmd>')
@@ -167,11 +180,15 @@ def execute(scriptname):
             parameters[name] = session[name]
         elif ptype == 'FILEDOWN':
             extension = definition.get('extension','bin')
-            tmpfile = tempfile.NamedTemporaryFile(suffix='.'+extension, delete=False)
-            session[name]=tmpfile.name
-            parameters[name] = session[name]
-            output_file = definition.get('filename',name).format(**parameters)
-            output_param = name
+            tmpfile = tempfile.NamedTemporaryFile(
+		suffix='.'+extension,
+		delete=False,
+		dir=configdb.scriptlauncher.get('download_folder',None),
+		)
+            parameters[name] = tmpfile.name # use the tmp file in the command
+            session[name] = os.path.basename(tmpfile.name) # store the basefilename as cockie
+            output_param = name # write down the output param name
+            output_file = definition.get('filename',name).format(**parameters) # build the attachment file name
         if not parameters.get(name, None) and definition.get('default',None):
             parameters[name] = definition.default
 

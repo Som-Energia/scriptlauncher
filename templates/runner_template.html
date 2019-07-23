@@ -199,7 +199,9 @@ $(document).ready(function(){
                 }
                 $.loader.close();
                 if (response.output_file!=false) {
-                    location.href = "/download/"+response.script_name+"/"+response.output_param+"/"+response.output_file;
+                    var downloaduri = "/download/"+response.script_name+"/"+response.output_param+"/"+response.output_file;
+                    console.log("downloading ", downloaduri);
+                    window.location = downloaduri;
                 }
             }).fail(function(data) {
                 $.loader.close();
@@ -233,7 +235,6 @@ $(document).ready(function(){
                 contentType: false,
                 cache: false,
                 processData: false,
-                async: false,
                 success: function(data) {
                     console.log('Success file uploading!', data);
                     $("#uploading-file-{{paramname}}").css("color","green");
