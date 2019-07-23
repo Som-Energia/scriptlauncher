@@ -123,6 +123,13 @@
                       <span id="uploading-filename-{{paramname}}" class="uploading_filename"><span class="placeholder">Cap arxiu seleccionat</span></span>
                       <span id="uploading-file-{{paramname}}" class="uploading_file">Loading...</span>
                       </div>
+                {% elif parameter.type =='enum' %}
+                      <label for="{{paramname}}" class="param_name">{{parameter.description}} [{{paramname}}]:</label>
+                      <select id="upload-file-{{paramname}}" name='{{paramname}}' />
+                        {% for description, value in parameter.options.items() %}
+                          <option value="{{value}}" {% if value==parameter.default %}selected{% endif%}>{{description}}</option>
+                        {% endfor %}
+                      </select>
                 {% else %}
                       <label for="{{paramname}}" class="param_name">{{parameter.description}} [{{paramname}}]:</label>
                       <input name="{{paramname}}"/>
@@ -192,7 +199,7 @@ $(document).ready(function(){
                 }
                 $.loader.close();
                 if (response.output_file!=false) {
-                    location.href = "/download/"+response.script_name+"/"+response.output_file;
+                    location.href = "/download/"+response.script_name+"/"+response.output_param+"/"+response.output_file;
                 }
             }).fail(function(data) {
                 $.loader.close();

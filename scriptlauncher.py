@@ -83,14 +83,16 @@ def configScripts():
         scripts.update(category.scripts)
     return scripts
 
-def parseDownloadFileParm(parm,script):
-    parmExtension=parm+"."+script.parameters[parm].extension
-    if script.islist:
-        for n,listElem in enumerate(script.script):
-            if parm in listElem:
-                script.script[n] = listElem.replace(parm,parmExtension)
-    else:
-        script.script=script.script.replace(parm,parmExtension)
+def parseDownloadFileParm(paramName,script):
+    filename=paramName+"."+script.parameters[paramName].extension
+    if not script.islist:
+        script.script=script.script.replace(paramName,filename)
+        return script
+    script.script = [
+        argument if paramName not in argument
+        else argument.replace(paramName, filename)
+        for argument in script.script
+    ]
     return script
 
 
@@ -117,12 +119,12 @@ def upload():
     afile.save(tmpfile.name)
     return jsonify({"success":True})
 
-@app.route('/download/<scriptname>/<path:param_name>')
-def download(scriptname,param_name):
+@app.route('/download/<scriptname>/<param_name>/<filename>')
+def download(scriptname, param_name, filename=None):
     scripts = configScripts()
-    filename = param_name
-    extension = scripts[scriptname]['parameters'][param_name].get('extension','bin')
-    filename+="."+extension
+    parameter = scripts[scriptname].parameters[param_name]
+    filename = filename or (
+        param_name + '.' + parameter.get('extension', 'bin'))
     try:
         return send_file(
             session[param_name],
@@ -141,11 +143,10 @@ def runner(cmd):
     script=scripts[cmd]
     script.islist = type(script.script) is list
     if 'parameters' in script:
-        for parm in script.parameters:
-            if ("type" in script.parameters[parm] and script.parameters[parm].type
-                == "FILEDOWN"):
+        for paramname, param in script.parameters.items():
+            if param.get('type', None) == 'FILEDOWN':
                 script=parseDownloadFileParm(
-                    parm,script)
+                    paramname,script)
     return render_template(
         'runner_template.html',
         name=cmd,
@@ -166,10 +167,11 @@ def execute(scriptname):
             parameters[name] = session[name]
         elif ptype == 'FILEDOWN':
             extension = definition.get('extension','bin')
-            tmpfile = tempfile.NamedTemporaryFile(suffix=extension, delete=False)
+            tmpfile = tempfile.NamedTemporaryFile(suffix='.'+extension, delete=False)
             session[name]=tmpfile.name
             parameters[name] = session[name]
-            output_file = name
+            output_file = definition.get('filename',name).format(**parameters)
+            output_param = name
         if not parameters.get(name, None) and definition.get('default',None):
             parameters[name] = definition.default
 
@@ -203,6 +205,9 @@ def execute(scriptname):
         output_decoded=output.decode('utf-8')
     except UnicodeDecodeError:
         output_decoded=output.decode('latin-1')
+    import pipes
+    output_decoded = 'Running:' + ' '.join([
+        pipes.quote(arg) for arg in command]) + '\n' + output_decoded
 
     if 'send' in entry:
         subst = ns(
@@ -239,6 +244,7 @@ def execute(scriptname):
     return json.dumps(dict(
         script_name=scriptname,
         output_file=output_file,
+        output_param=output_param,
         return_code=return_code,
         response=deansi.deansi(output_decoded),
         commandline=command,
