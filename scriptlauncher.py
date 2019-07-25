@@ -173,6 +173,7 @@ def execute(scriptname):
     parameters = ns(request.form.items())
     params_list = []
     output_file = False
+    output_param = ''
     entry = scripts[scriptname]
     for name, definition in entry.get('parameters',ns()).items():
         ptype = definition.get('type',None)
