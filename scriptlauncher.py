@@ -135,7 +135,7 @@ def download(scriptname, param_name, filename=None):
     parameter = scripts[scriptname].parameters[param_name]
     filename = filename or (
         param_name + '.' + parameter.get('extension', 'bin'))
-    dir=configdb.scriptlauncher.get('download_folder',None)
+    dir=configdb.scriptlauncher.get('download_folder','/tmp')
 
     try:
         return send_from_directory(
@@ -182,10 +182,10 @@ def execute(scriptname):
         elif ptype == 'FILEDOWN':
             extension = definition.get('extension','bin')
             tmpfile = tempfile.NamedTemporaryFile(
-		suffix='.'+extension,
-		delete=False,
-		dir=configdb.scriptlauncher.get('download_folder',None),
-		)
+                suffix='.'+extension,
+                delete=False,
+                dir=configdb.scriptlauncher.get('download_folder','/tmp'),
+                )
             parameters[name] = tmpfile.name # use the tmp file in the command
             session[name] = os.path.basename(tmpfile.name) # store the basefilename as cockie
             output_param = name # write down the output param name
