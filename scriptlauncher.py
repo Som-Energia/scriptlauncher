@@ -83,17 +83,17 @@ def configScripts():
         scripts.update(category.scripts)
     return scripts
 
-def parseDownloadFileParm(paramName,script):
-    filename=paramName+"."+script.parameters[paramName].extension
+def parseDownloadFileParm(paramName, script):
+    parameter = script.parameters[paramName]
+    filename=paramName+"."+parameter.extension
     if not script.islist:
-        script.script=script.script.replace(paramName,filename)
-        return script
+        script.script = script.script.replace('{'+paramName+'}','{'+filename+'}')
+        return
     script.script = [
-        argument if paramName not in argument
-        else argument.replace(paramName, filename)
+        argument.replace('{'+paramName+'}','{'+filename+'}')
         for argument in script.script
     ]
-    return script
+    return
 
 
 @app.route('/', methods=('GET', 'POST'))
@@ -158,8 +158,7 @@ def runner(cmd):
     if 'parameters' in script:
         for paramname, param in script.parameters.items():
             if param.get('type', None) == 'FILEDOWN':
-                script=parseDownloadFileParm(
-                    paramname,script)
+                parseDownloadFileParm(paramname,script)
     return render_template(
         'runner_template.html',
         name=cmd,
@@ -223,6 +222,7 @@ def execute(scriptname):
         output_decoded=output.decode('utf-8')
     except UnicodeDecodeError:
         output_decoded=output.decode('latin-1')
+
     import pipes
     output_decoded = 'Running:' + ' '.join([
         pipes.quote(arg) for arg in command]) + '\n' + output_decoded
