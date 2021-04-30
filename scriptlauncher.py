@@ -12,7 +12,7 @@ from flask import (
     send_from_directory,
 )
 from yamlns import namespace as ns
-from ooop import OOOP
+from erppeek import Client
 import functools
 import subprocess
 import deansi
@@ -52,13 +52,13 @@ def check_auth(username, password):
     """
     if configdb.scriptlauncher.get('ignoreauth',False):
         return True
-    configdb.ooop['user'] = username
-    configdb.ooop['pwd'] = password
+    configdb.erppeek['user'] = username
+    configdb.erppeek['password'] = password
     try:
-        O = OOOP(**configdb.ooop)
+        O = Client(**configdb.erppeek)
         return True
     except:
-        print "Unable to connect to ERP"
+        print("Unable to connect to ERP")
         return False
 
 def flash_errors(form):
