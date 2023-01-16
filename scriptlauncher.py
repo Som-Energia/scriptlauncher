@@ -35,11 +35,11 @@ def requires_auth(f):
     def decorated(*args, **kwd):
         auth = request.authorization
         if not auth or not check_auth(auth.username, auth.password):
-            return authenticate()
+            return authentication_error()
         return f(*args, **kwd)
     return decorated
 
-def authenticate():
+def authentication_error():
     """Sends a 401 response that enables basic auth"""
     return Response(
         "No ha estat possible validar l'usuari.\n", 401,
