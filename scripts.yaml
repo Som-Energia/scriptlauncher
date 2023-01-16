@@ -102,3 +102,17 @@ test:
         mail:
           description: Introdueix el correu electrònic
 
+    enumFields:
+      title: Enum field type
+      description: How to use enum field types
+      script: echo {choose}
+      parameters:
+        choose:
+          description: Choose an option
+          type: enum
+          options:
+            The first value: value1
+            The second value: value2
+            The last value: value3
+          default: value2
+
