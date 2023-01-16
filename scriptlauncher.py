@@ -112,12 +112,14 @@ def upload():
     parmname = request.form['filename']
     extension = os.path.splitext(afile.filename)[1]
     tmpfile = tempfile.NamedTemporaryFile(suffix=extension, delete=False)
-    session[parmname]=tmpfile.name
+    import uuid
+    fileid=str(uuid.uuid4())
+    session[fileid]=tmpfile.name
     if not afile:
         return #jsonify({"success":False})
 
     afile.save(tmpfile.name)
-    return jsonify({"success":True})
+    return jsonify({"fileid": fileid, "success":True})
 
 @app.route('/download/<scriptname>/<param_name>/<filename>')
 def download(scriptname, param_name, filename=None):
@@ -166,7 +168,6 @@ def runner(cmd):
         **script
         )
 
-
 def execute(scriptname):
     scripts = configScripts()
     parameters = ns(request.form.items())
@@ -177,10 +178,11 @@ def execute(scriptname):
     for name, definition in entry.get('parameters',ns()).items():
         ptype = definition.get('type',None)
         if ptype ==  'FILE':
-            if name in session:
-                parameters[name] = session[name]
-            elif definition.default:
-                parameters[name] = definition.default
+            fileid = parameters.get(name+"-fileid", None)
+            if fileid and fileid in session:
+                parameters[name] = session[fileid]
+            else:
+                parameters[name] = definition.get('default', '/dev/null')
 
         elif ptype == 'FILEDOWN':
             extension = definition.get('extension','bin')

@@ -30,11 +30,6 @@
         .loading {
             margin: auto;
         }
-        .uploading_file {
-            display: none;
-            color: red;
-            text-align: right;
-        }
         .downloading_file {
             display: none;
         }
@@ -64,6 +59,24 @@
         }
         .uploader input[type=file] {
             display: none;
+        }
+        @keyframes spin {
+            from { transform: rotate(0); }
+            to { transform: rotate(360deg); }
+        }
+        .uploader.uploading .uploading_filename:after {
+            display: inline-block;
+            margin-left: 8pt;
+            color: maroon;
+            content: "\1F5D8";
+            line-height: 0; /* Trick to center spin */
+            animation: spin 1s linear infinite;
+        }
+        .uploader.uploaded .uploading_filename:after {
+            display: inline-block;
+            margin-left: 8pt;
+            color: green;
+            content: "\2713";
         }
         .loading span {
           line-height: 32px;
@@ -114,13 +127,13 @@
                 <div class='parameter'>
                 {% if parameter.type =='FILE' %}
                       <label for="{{paramname}}" class="param_name">{{parameter.description}} [{{paramname}}]:</label>
-                      <div class='uploader'>
+                      <div class='uploader uploader-{{paramname}} empty'>
                         <label>
                           Navega...
                           <input id="upload-file-{{paramname}}" type='file' name='{{paramname}}' />
+                          <input id="upload-fileid-{{paramname}}" type='hidden' name='{{paramname}}-fileid' class='upload-fileid' value='' />
                         </label>
-                      <span id="uploading-filename-{{paramname}}" class="uploading_filename"><span class="placeholder">Cap arxiu seleccionat</span></span>
-                      <span id="uploading-file-{{paramname}}" class="uploading_file">Loading...</span>
+                        <span id="uploading-filename-{{paramname}}" class="uploading_filename"><span class="placeholder">Cap arxiu seleccionat</span></span>
                       </div>
                 {% elif parameter.type =='enum' %}
                       <label for="{{paramname}}" class="param_name">{{parameter.description}} [{{paramname}}]:</label>
@@ -161,25 +174,44 @@
     <div id="download-div" class="downloading_file"><a id="download-link" href="">Descarrega l'arxiu</a></div>
     <div id="index-link" class="links"><a href="/">Torna a la llista d'scripts</a></div>
 <script type="text/javascript">
+function setUploaderState(paramName, state) {
+    ['empty', 'uploading', 'uploaded'].map(function(stateclass) {
+        if (state === stateclass) {
+            $(".uploader-"+paramName).addClass(stateclass);
+        }
+        else {
+            $(".uploader-"+paramName).removeClass(stateclass);
+        }
+    });
+}
+function uploaderIsInState(paramName, state) {
+    const selector = ".uploader-"+paramName+"."+state;
+    const inState = $(selector);
+    return inState.length !== 0;
+}
 $(document).ready(function(){
+    // Reset all hidden upload fields
+    // Some browsers cache them on page reload
+    $('.upload-fileid').val('');
+
     $("#runner").submit(function(e) {
-        if ( $( ".uploading_file" ).length) {
-            console.log("There are uploading file class elements");
-            var colorArray = $(".uploading_file").map(function () {
-                return $(this).css("color");
-            }).get();
-            for (i = 0; i < colorArray.length; i++) {
-                if ( colorArray[i]!= "rgb(0, 128, 0)"){
-                    if ($( ".uploading_file" ).length == 1){
-                        alert("Encara s'està pujant l'arxiu");
-                    }
-                    else {
-                        alert("Encara està pujant-se algun arxiu");
-                    }
-                    return;
-                }
-            }
-            $("#uploading-file").css("display","none");
+        var errors = [];
+        {% if parameters is defined %}
+        {% for paramname, parameter in parameters.items() if parameter.type == 'FILE' %}
+        {% if parameter.default is not defined %}
+        if (uploaderIsInState("{{paramname}}", 'empty')) {
+            errors.push("Please choose a file for required parameter {{paramname}}")
+        } else
+        {% endif %}
+        if (uploaderIsInState("{{paramname}}", 'uploading')) {
+            errors.push("Still uploading file for {{paramname}}")
+        }
+        {% endfor %}
+        {% endif %}
+        if (errors.length !== 0) {
+            alert(errors.join("\n"))
+            e.preventDefault();
+            return;
         }
         $("#result").css("border-color","#489");
         $("#runner").loader({
@@ -226,9 +258,8 @@ $(document).ready(function(){
             $("#upload-file-{{paramname}}").loader({
                 imgUrl: "{{ url_for('static', filename='loading32x32.gif') }}"
             });
-            $("#uploading-file-{{paramname}}").css("display","inline");
-            $("#uploading-file-{{paramname}}").css("color","red");
-            $("#uploading-file-{{paramname}}").html("Pujant...");
+            setUploaderState("{{paramname}}", 'uploading');
+
             $("#uploading-filename-{{paramname}}").html($('#upload-file-{{paramname}}')[0].files[0].name);
             $.ajax({
                 type: 'POST',
@@ -239,8 +270,8 @@ $(document).ready(function(){
                 processData: false,
                 success: function(data) {
                     console.log('Success file uploading!', data);
-                    $("#uploading-file-{{paramname}}").css("color","green");
-                    $("#uploading-file-{{paramname}}").html("Pujat!");
+                    setUploaderState("{{paramname}}", 'uploaded');
+                    $('#upload-fileid-{{paramname}}').val(data.fileid);
                     $.loader.close();
                 },
             });
