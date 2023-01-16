@@ -116,3 +116,15 @@ test:
             The last value: value3
           default: value2
 
+    fieldTypes:
+      title: Using input field types
+      description: How to use input field types
+      script: echo {birthday} {favouriteColor}
+      parameters:
+        birthday:
+          type: date
+        favouriteColor:
+          type: color
+          default: "#ffff00"
+
+
