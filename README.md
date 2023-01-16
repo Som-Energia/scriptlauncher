@@ -1,6 +1,6 @@
 # scriptlauncher
 
-Flask app to launch scripts in a server
+Flask app to launch scripts in a server.
 
 ## Development Setup
 
@@ -21,6 +21,107 @@ python scriptlauncher.py scriptlauncher.yaml
 echo myerpuser:myerppassword > test.cfg
 ./test.sh
 ```
+
+## Diclaimer on security
+
+This application is not intended to be used by untrusted users.
+It executes commandline scripts with user provided parameters.
+Special care must be taken on how scripts are defined as it might
+create script injection oportunities.
+
+## Adding scripts
+
+You can run ScriptLauncher providing a yaml configuration file (or many).
+
+A configuration file contains a set of categories
+which each one include a set of scripts.
+
+```yaml
+myfirstcategory:
+  description: My First Category
+  scripts:
+    myfirstscript:
+      title: My first script
+      description: >
+        An extended description for the script
+        for the user to understand how to use it
+      script: savebirthday {name} {birthday} {favouriteColor}
+      parameters:
+        name:
+          description: Your name
+        birthday:
+          description: Your birthday date
+          type: date
+        favouriteColor:
+          description: Your favourite colour
+          type: color
+          default: '#ffff00'
+```
+Keys for categories and scripts will be used as identifiers in url's.
+If several configuration files are provided,
+categories are merged but scripts are overwritten
+if keys match (the later config will survive).
+
+## Using parameters
+
+Parameters can be expanded into the command line,
+by using [Python format minilanguage](https://docs.python.org/3/library/string.html#formatspec).
+
+They can be also expanded in some other attributes.
+
+
+## Parameter types
+
+By default, script parameters are plain text fields.
+This can be changed by using the `type` attribute:
+
+- `enum`: Will be shown as a select box.
+	- You can specify `options` as a dictionary where keys are the displayed texts and values are the sent value.
+- You can use any type supported by html `input` tag: `date`, `time`, `color`... It will use browser standard editor for such a type.
+- `FILE`: A file uploaded by the user
+	- The parameter will be substituted on the command line by the temporary file name in the server of the uploaded file
+	- If you want to make a file to be optional you can default it to `/dev/null`, it will be an empty file
+- `FILEDOWN`:
+	- This parameter is not editable by the user
+	- It will expand in the command line to a temporary file name you can use as output for your command
+	- The file will be downloaded after executing the script.
+	- An `extension` can be specified for the browser to identify the file type
+	- Also a `filename` the browser will propose as save name
+		- The file name can contain format specifiers to use parameters
+
+For any type but `FILEDOWN`, you can specify a `default` property.
+This value will be taken if none is specified.
+
+## Automatically send mails
+
+Script attibute `send` can be used to automatically
+send the output of the script by mail.
+The output will be html formated including ANSI colors.
+
+Sendmail configuration has to be added to configdb.py
+(see [emili](https://github.com/Som-Energia/emili) documentation).
+
+The `send` attribute has the following structure:
+
+```yaml
+  myscript:
+    ...
+    send:
+        subject: "This is the subject"
+	to:
+	- recipient1@somewhere.com
+	- recipient2@somewhere.com
+```
+
+Both `subject` and `to` strings may contain format directives
+that will be filed with any parameter and those extra ones:
+
+- title: The entry title
+- today: The current date
+- OKKO: An empty string or 'ERROR' if the command failed.
+
+
+
 
 
 
