@@ -131,7 +131,7 @@
                       </select>
                 {% else %}
                       <label for="{{paramname}}" class="param_name">{{parameter.description}} [{{paramname}}]:</label>
-                      <input name="{{paramname}}"/>
+                      <input name="{{paramname}}" {% if parameter.type is defined %}  type="{{parameter.type}}" {% endif %}  />
                 {% endif %}
                 </div>
             {% endfor %}
