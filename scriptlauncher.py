@@ -177,7 +177,11 @@ def execute(scriptname):
     for name, definition in entry.get('parameters',ns()).items():
         ptype = definition.get('type',None)
         if ptype ==  'FILE':
-            parameters[name] = session[name]
+            if name in session:
+                parameters[name] = session[name]
+            elif definition.default:
+                parameters[name] = definition.default
+
         elif ptype == 'FILEDOWN':
             extension = definition.get('extension','bin')
             tmpfile = tempfile.NamedTemporaryFile(
