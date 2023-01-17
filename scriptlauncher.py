@@ -20,6 +20,10 @@ import shlex
 import json
 import os
 import sys
+try:
+    from pathlib import Path
+except ImportError:
+    from pathlib2 import Path
 from datetime import datetime
 import tempfile
 
@@ -68,11 +72,33 @@ def flash_errors(form):
             errors
         ))
 
+def workingDirForScripts(scripts, workingdir):
+    for script in scripts.values():
+        script.workingdir = (
+            workingdir if 'workingdir' not in script else
+            None if script.workingdir == "LEGACY" else
+            None if workingdir is None else
+            workingdir / script.workingdir
+        )
+
+def workingDirForCategories(categories, workingdir):
+    for category in categories.values():
+        workingDirForScripts(
+            category.scripts,
+            workingdir if 'workingdir' not in category else
+            None if category.workingdir == "LEGACY" else
+            None if workingdir is None else
+            workingdir / category.workingdir
+        )
+
 def config():
     if config.data is None or debug is True:
         config.data = ns()
         for configfile in sys.argv[1:] or ['scripts.yaml']:
-            config.data.update(ns.load(configfile))
+            workingdir = Path(configfile).parent.resolve(strict=True)
+            categories = ns.load(configfile)
+            workingDirForCategories(categories, workingdir)
+            config.data.update(categories)
     return config.data
 
 config.data = None
@@ -214,8 +240,17 @@ def execute(scriptname):
         ]
     return_code=0
 
+    workingdir = (
+        os.getcwd()
+        if entry.workingdir is None else
+        entry.workingdir
+    )
     try:
-        output=subprocess.check_output(command,stderr=subprocess.STDOUT)
+        output=subprocess.check_output(
+            command,
+            stderr=subprocess.STDOUT,
+            cwd= workingdir,
+        )
     except subprocess.CalledProcessError as e:
         output=e.output
         return_code=e.returncode
