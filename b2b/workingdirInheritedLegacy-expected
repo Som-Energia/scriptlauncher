@@ -1,0 +1,1 @@
+{"script_name": "workingdirInheritedLegacy", "output_file": false, "output_param": "", "return_code": 0, "response": "Running:pwd\n/home/vokimon/somenergia/scriptlauncher\n", "commandline": ["pwd"]}

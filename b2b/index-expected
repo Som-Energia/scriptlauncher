@@ -36,6 +36,13 @@
                 
                     <li><a href='/runner/fieldTypes'>Using input field types</a></li>
                 
+            </div>
+        
+            
+                <p><a id="workingDirTests-link" href="#">Working dir tests</a></p>
+            
+            <div id="workingDirTests" class="script-list" style="display:none">
+                
                     <li><a href='/runner/workingdirInherit'>Working dir: inherited</a></li>
                 
                     <li><a href='/runner/workingdirOverride'>Working dir: overriden with absolute</a></li>
@@ -43,6 +50,28 @@
                     <li><a href='/runner/workingdirRelative'>Working dir: overriden with relative</a></li>
                 
                     <li><a href='/runner/workingdirLegacy'>Working dir: legacy behaviour</a></li>
+                
+            </div>
+        
+            
+                <p><a id="legacyWorkingDir-link" href="#">Tests with legacy working dir category</a></p>
+            
+            <div id="legacyWorkingDir" class="script-list" style="display:none">
+                
+                    <li><a href='/runner/workingdirInheritedLegacy'>Working dir: inherited legacy behaviour</a></li>
+                
+                    <li><a href='/runner/workingdirOverridenLegacy'>Working dir: overriden legacy behaviour</a></li>
+                
+            </div>
+        
+            
+                <p><a id="inheritedWorkingdir-link" href="#">Tests with working dir category</a></p>
+            
+            <div id="inheritedWorkingdir" class="script-list" style="display:none">
+                
+                    <li><a href='/runner/workingdirInherited'>Working dir: category inherited</a></li>
+                
+                    <li><a href='/runner/workingdirRelativeInherited'>Working dir: relative to category inherited</a></li>
                 
             </div>
         
@@ -55,6 +84,36 @@
             }
             else {
                 $("#test").hide("fast");
+            }
+        }
+        );
+    
+        $("#workingDirTests-link").click(function(){
+            if ($("#workingDirTests").css("display")=="none"){
+                $("#workingDirTests").show("fast");
+            }
+            else {
+                $("#workingDirTests").hide("fast");
+            }
+        }
+        );
+    
+        $("#legacyWorkingDir-link").click(function(){
+            if ($("#legacyWorkingDir").css("display")=="none"){
+                $("#legacyWorkingDir").show("fast");
+            }
+            else {
+                $("#legacyWorkingDir").hide("fast");
+            }
+        }
+        );
+    
+        $("#inheritedWorkingdir-link").click(function(){
+            if ($("#inheritedWorkingdir").css("display")=="none"){
+                $("#inheritedWorkingdir").show("fast");
+            }
+            else {
+                $("#inheritedWorkingdir").hide("fast");
             }
         }
         );
