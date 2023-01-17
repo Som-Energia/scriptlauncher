@@ -127,4 +127,37 @@ test:
           type: color
           default: "#ffff00"
 
+    workingdirInherit:
+      title: "Working dir: inherited"
+      description: >
+        By not specifying the `workingdir`
+        it will be inherited from category,
+        which is, by default the location of the yaml file.
+      script: pwd
+
+    workingdirOverride:
+      title: "Working dir: overriden with absolute"
+      description: >
+        Defining the working dir with an absolute path
+        will fully override the inherited working dir
+      script: pwd
+      workingdir: /usr
+
+    workingdirRelative:
+      title: "Working dir: overriden with relative"
+      description: If the workingdir attribute is relative, it is constructed over the inherited one
+      script: pwd
+      workingdir: static
+
+    workingdirLegacy:
+      title: "Working dir: legacy behaviour"
+      description: >
+        Defining `workingdir: LEGACY`
+        has the former behaviour
+        of using the scriptlauncher working dir
+      script: pwd
+      workingdir: LEGACY
+
+
+
 
