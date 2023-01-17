@@ -18,3 +18,11 @@ b2b workingdirOverride \
 	curl -s localhost:5000/run/workingdirOverride -u $auth
 b2b workingdirLegacy \
 	curl -s localhost:5000/run/workingdirLegacy -u $auth
+b2b workingdirInheritedLegacy \
+	curl -s localhost:5000/run/workingdirInheritedLegacy  -u $auth
+b2b workingdirOverridenLegacy \
+	curl -s localhost:5000/run/workingdirOverridenLegacy -u $auth
+b2b workingdirInherited \
+	curl -s localhost:5000/run/workingdirInherited -u $auth
+b2b workingdirRelativeInherited \
+	curl -s localhost:5000/run/workingdirRelativeInherited -u $auth

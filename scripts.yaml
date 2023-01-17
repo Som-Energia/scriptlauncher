@@ -127,6 +127,9 @@ test:
           type: color
           default: "#ffff00"
 
+workingDirTests:
+  description: Working dir tests
+  scripts:
     workingdirInherit:
       title: "Working dir: inherited"
       description: >
@@ -158,6 +161,41 @@ test:
       script: pwd
       workingdir: LEGACY
 
+legacyWorkingDir:
+  description: "Tests with legacy working dir category"
+  workingdir: LEGACY
+  scripts:
+    workingdirInheritedLegacy:
+      title: "Working dir: inherited legacy behaviour"
+      description: >
+        Defining `workingdir: LEGACY`
+        in the category is inherited by scripts
+      script: pwd
 
+    workingdirOverridenLegacy:
+      title: "Working dir: overriden legacy behaviour"
+      description: >
+        Defining `workingdir` in scripts
+        disables category's LEGACY mode
+        and recovers standard as reference
+      script: pwd
+      workingdir: .
 
-
+inheritedWorkingdir:
+  description: "Tests with working dir category"
+  workingdir: /usr
+  scripts:
+    workingdirInherited:
+      title: "Working dir: category inherited"
+      description: >
+        Defining `workingdir: /usr` in category is inherited by scripts
+      script: pwd
+      workingdir: .
+    workingdirRelativeInherited:
+      title: "Working dir: relative to category inherited"
+      description: >
+        Defining `workingdir: /usr` in category is inherited by scripts
+        but scripts may define a relative path to it
+      script: pwd
+      workingdir: bin
+  
