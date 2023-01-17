@@ -72,23 +72,28 @@ def flash_errors(form):
             errors
         ))
 
-def workingDirForScripts(scripts, workingdir):
+def workingDirForScripts(scripts, workingdir, legacy=False):
     for script in scripts.values():
+        thislegacy = legacy or script.get
         script.workingdir = (
+            None if legacy and 'workingdir' not in script else
+            None if script.get('workingdir',None) == 'LEGACY' else
             workingdir if 'workingdir' not in script else
-            None if script.workingdir == "LEGACY" else
-            None if workingdir is None else
             workingdir / script.workingdir
         )
 
-def workingDirForCategories(categories, workingdir):
+def workingDirForCategories(categories, workingdir, legacy=False):
     for category in categories.values():
         workingDirForScripts(
             category.scripts,
             workingdir if 'workingdir' not in category else
-            None if category.workingdir == "LEGACY" else
-            None if workingdir is None else
+            workingdir if category.workingdir == "LEGACY" else
             workingdir / category.workingdir
+            ,
+            legacy = (
+                (legacy and 'workingdir' not in category)
+                or category.get('workingdir') == 'LEGACY'
+            ),
         )
 
 def config():
@@ -97,7 +102,11 @@ def config():
         for configfile in sys.argv[1:] or ['scripts.yaml']:
             workingdir = Path(configfile).parent.resolve(strict=True)
             categories = ns.load(configfile)
-            workingDirForCategories(categories, workingdir)
+            workingDirForCategories(
+                categories,
+                workingdir,
+                legacy=configdb.scriptlauncher.get('legacyWorkingDir',False),
+            )
             config.data.update(categories)
     return config.data
 
