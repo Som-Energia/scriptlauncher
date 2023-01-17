@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+    <title>Lista de scripts</title>
+    <link rel=stylesheet type=text/css href="/static/style.css">
+    <script src="/static/jquery-1.11.0.min.js"></script>
+</head>
+<body>
+    <h1>Scripts</h1>
+    <ul>
+        
+            
+                <p><a id="test-link" href="#">Testing scripts</a></p>
+            
+            <div id="test" class="script-list" style="display:none">
+                
+                    <li><a href='/runner/test_parameter'>Passing parameters</a></li>
+                
+                    <li><a href='/runner/pythonExample'>Reverse</a></li>
+                
+                    <li><a href='/runner/failing'>Failing script</a></li>
+                
+                    <li><a href='/runner/unexistingCommand'>Unexisting command</a></li>
+                
+                    <li><a href='/runner/test_fileupload'>Search in file (Single upload)</a></li>
+                
+                    <li><a href='/runner/test_multifileupload'>Concatenate files (Multiple uploads)</a></li>
+                
+                    <li><a href='/runner/test_filedownload_list'>Example: Downloading file (list)</a></li>
+                
+                    <li><a href='/runner/test_filedownload'>Example: Downloading file (no list)</a></li>
+                
+                    <li><a href='/runner/sendingMail'>How to send mails</a></li>
+                
+                    <li><a href='/runner/enumFields'>Enum field type</a></li>
+                
+                    <li><a href='/runner/fieldTypes'>Using input field types</a></li>
+                
+                    <li><a href='/runner/workingdirInherit'>Working dir: inherited</a></li>
+                
+                    <li><a href='/runner/workingdirOverride'>Working dir: overriden with absolute</a></li>
+                
+                    <li><a href='/runner/workingdirRelative'>Working dir: overriden with relative</a></li>
+                
+                    <li><a href='/runner/workingdirLegacy'>Working dir: legacy behaviour</a></li>
+                
+            </div>
+        
+    </ul>
+<script>
+    
+        $("#test-link").click(function(){
+            if ($("#test").css("display")=="none"){
+                $("#test").show("fast");
+            }
+            else {
+                $("#test").hide("fast");
+            }
+        }
+        );
+    
+</script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+{"script_name": "test_parameter", "output_file": false, "output_param": "", "return_code": 0, "response": "Running:/usr/bin/printf 'It works\n'\nIt works\n", "commandline": ["/usr/bin/printf", "It works\n"]}
