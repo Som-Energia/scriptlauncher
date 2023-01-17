@@ -67,12 +67,12 @@ myfirstcategory:
 Keys for categories and scripts will be used as identifiers in url's
 that can be used to access scripts directly.
 
-## Multiple scripts
+## Multiple configuration files
 
 If several configuration files are provided,
 they are merged at category level.
 If the same category is defined in a later configuration file,
-scripts on the same category for the previous configuration are removed.
+scripts on the same category for the previous configuration are discarded.
 
 ## Using parameters
 
@@ -98,15 +98,20 @@ Relative paths refer to the inherited `workingdir`.
 
 ### Legacy working dir
 
-In previous versions, scripts were run in the same working dir than the scriptlauncher API.
+**This functionality is provided as migration tool, is deprecated and will be dropped eventually.**
+
+In previous versions, scripts were run in the same working dir than the scriptlauncher API is run.
 For compatibility with old configurations, you can define `workingdir: LEGACY` in categories or scripts.
 Also `configdb.scriptlauncher.legacyWorkingDir=True` does that in general.
 This will set the API working directory as working directory for the scripts.
 
-Legacy mode will be disabled for a category or scripts as soon as `workingdir` is set different to `LEGACY`.
-Conveniently `.` just recovers the standard behaviour if you do not have `workingdir` defined.
+Legacy mode is inherited but the standard behaviour is
+recovered when `workingdir` is set different to `LEGACY`.
 
-**Legacy mode is provided as migration tool, is deprecated and will be dropped eventually.**
+Relative paths refer to the path as in standard behaviour,
+not the LEGACY path.
+So, conveniently `.` just recovers the standard behaviour
+and can be used for progressive migration.
 
 ## Parameter types
 
@@ -126,7 +131,7 @@ This can be changed by using the `type` attribute:
 	- The file will be downloaded after executing the script.
 	- An `extension` can be specified for the browser to identify the file type
 	- Also a `filename` the browser will propose as save name
-		- The file name can contain format specifiers to use parameters
+		- The filename can contain format specifiers to use parameters
 
 For any type but `FILEDOWN`, you can specify a `default` property.
 This value will be taken if none is specified.
@@ -147,9 +152,9 @@ The `send` attribute has the following structure:
     ...
     send:
         subject: "This is the subject"
-	to:
-	- recipient1@somewhere.com
-	- recipient2@somewhere.com
+        to:
+        - recipient1@somewhere.com
+        - recipient2@somewhere.com
 ```
 
 Both `subject` and `to` strings may contain format directives
@@ -160,7 +165,12 @@ that will be filed with any parameter and those extra ones:
 - OKKO: An empty string or 'ERROR' if the command failed.
 
 
+## dbconfig Configuration
 
+- `scriplauncher.prefix`: will substitute `SOME_SRC` string in commandline
+- `scriplauncher.legacyWorkingDir`: Enables the legacy working dir mode (Default: False)
+- `scriplauncher.ignoreauth`: Disables auth for testing purposes (Default: False)
+- `scriplauncher.download_folder`: Disables auth for testing purposes (Default: `/tmp`)
 
 
 
