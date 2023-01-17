@@ -16,7 +16,13 @@ pip install -r requirements.txt
 # - The usual configdb.erppeek configuration plus (used for user validation)
 # - configdb.scriptlauncher.prefix to use as working path
 # Launch the server
-python scriptlauncher.py scriptlauncher.yaml
+python scriptlauncher.py myscripts.yaml
+```
+
+Passing the tests
+
+```bash
+python scriptlauncher.py scripts.yaml
 # To pass the tests (requires server up)
 echo myerpuser:myerppassword > test.cfg
 ./test.sh
@@ -31,10 +37,10 @@ create script injection oportunities.
 
 ## Adding scripts
 
-You can run ScriptLauncher providing a yaml configuration file (or many).
+You can run ScriptLauncher providing a yaml configuration file (or many) as command line parameter.
 
 A configuration file contains a set of categories
-which each one include a set of scripts.
+each one including a set of scripts.
 
 ```yaml
 myfirstcategory:
@@ -57,18 +63,50 @@ myfirstcategory:
           type: color
           default: '#ffff00'
 ```
-Keys for categories and scripts will be used as identifiers in url's.
+
+Keys for categories and scripts will be used as identifiers in url's
+that can be used to access scripts directly.
+
+## Multiple scripts
+
 If several configuration files are provided,
-categories are merged but scripts are overwritten
-if keys match (the later config will survive).
+they are merged at category level.
+If the same category is defined in a later configuration file,
+scripts on the same category for the previous configuration are removed.
 
 ## Using parameters
 
 Parameters can be expanded into the command line,
 by using [Python format minilanguage](https://docs.python.org/3/library/string.html#formatspec).
 
-They can be also expanded in some other attributes.
+The format string is passed an array with all the user
+provided values and some extra provide ones:
 
+- title: The entry title
+- today: The current date
+- OKKO: An empty string or 'ERROR' if the command failed (only available after execution)
+
+## Working directory
+
+For every configuration file,
+the default working directory to execute scripts from
+is the containing directory of each configuration file.
+Working directory is inherited from file to category to scripts.
+You can override it by adding a `workingdir` attribute
+at script or category level.
+Relative paths refer to the inherited `workingdir`.
+
+### Legacy working dir
+
+In previous versions, scripts were run in the same working dir than the scriptlauncher API.
+For compatibility with old configurations, you can define `workingdir: LEGACY` in categories or scripts.
+Also `configdb.scriptlauncher.legacyWorkingDir=True` does that in general.
+This will set the API working directory as working directory for the scripts.
+
+Legacy mode will be disabled for a category or scripts as soon as `workingdir` is set different to `LEGACY`.
+Conveniently `.` just recovers the standard behaviour if you do not have `workingdir` defined.
+
+**Legacy mode is provided as migration tool, is deprecated and will be dropped eventually.**
 
 ## Parameter types
 
@@ -77,10 +115,11 @@ This can be changed by using the `type` attribute:
 
 - `enum`: Will be shown as a select box.
 	- You can specify `options` as a dictionary where keys are the displayed texts and values are the sent value.
-- You can use any type supported by html `input` tag: `date`, `time`, `color`... It will use browser standard editor for such a type.
+- `date`, `time`, `color` or any other supported [HTML input type](https://www.w3schools.com/html/html_form_input_types.asp)
+   will be applied to the HTML `input` and it will use browser input control for that type.
 - `FILE`: A file uploaded by the user
-	- The parameter will be substituted on the command line by the temporary file name in the server of the uploaded file
-	- If you want to make a file to be optional you can default it to `/dev/null`, it will be an empty file
+	- The parameter will be substituted on the command line by the server location of the uploaded file.
+	- If you want to make a file to be optional by defaulting to a server path. A useful choice is `/dev/null`.
 - `FILEDOWN`:
 	- This parameter is not editable by the user
 	- It will expand in the command line to a temporary file name you can use as output for your command
