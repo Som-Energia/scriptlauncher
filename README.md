@@ -167,10 +167,10 @@ that will be filed with any parameter and those extra ones:
 
 ## dbconfig Configuration
 
-- `scriplauncher.prefix`: will substitute `SOME_SRC` string in commandline
-- `scriplauncher.legacyWorkingDir`: Enables the legacy working dir mode (Default: False)
-- `scriplauncher.ignoreauth`: Disables auth for testing purposes (Default: False)
-- `scriplauncher.download_folder`: Disables auth for testing purposes (Default: `/tmp`)
+- `scriptlauncher.prefix`: will substitute `SOME_SRC` string in commandline
+- `scriptlauncher.legacyWorkingDir`: Enables the legacy working dir mode (Default: False)
+- `scriptlauncher.ignoreauth`: Disables auth for testing purposes (Default: False)
+- `scriptlauncher.download_folder`: Disables auth for testing purposes (Default: `/tmp`)
 
 
 

@@ -291,7 +291,7 @@ def execute(scriptname):
             subject = u"[Web Script] {OKKO} {title} {today:%Y-%m-%d}"
         subject = subject.format(**subst)
 
-        to= [
+        to = [
             mail.format(**subst)
             for mail in entry.send.to
             if mail.format(**subst).strip()
