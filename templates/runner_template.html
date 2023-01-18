@@ -146,7 +146,7 @@
                       <label for="{{paramname}}" class="param_name">{{parameter.description}} [{{paramname}}]:</label>
                       <input name="{{paramname}}"
                         {% if parameter.type is defined %}  type="{{parameter.type}}" {% endif %}
-                        {% if parameter.default is defined %}  value="{{parameter.default}}" {% endif %}
+                        {% if parameter.default is defined and  not parameter.default is none %}  value="{{parameter.default}}" {% endif %}
                       />
                 {% endif %}
                 </div>

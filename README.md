@@ -98,7 +98,7 @@ Relative paths refer to the inherited `workingdir`.
 
 ### Legacy working dir
 
-**This functionality is provided as migration tool, is deprecated and will be dropped eventually.**
+**This functionality is provided as migration aid, it is deprecated and it will be dropped eventually.**
 
 In previous versions, scripts were run in the same working dir than the scriptlauncher API is run.
 For compatibility with old configurations, you can define `workingdir: LEGACY` in categories or scripts.
