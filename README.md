@@ -1,6 +1,6 @@
-# scriptlauncher
+# Script Launcher
 
-Flask app to launch scripts in a server.
+A simple web app to launch scripts on a server.
 
 ## Development Setup
 
@@ -31,7 +31,7 @@ echo myerpuser:myerppassword > test.cfg
 ## Diclaimer on security
 
 This application is not intended to be used by untrusted users.
-It executes commandline scripts with user provided parameters.
+It executes command line scripts with user provided parameters.
 Special care must be taken on how scripts are defined as it might
 create script injection oportunities.
 
