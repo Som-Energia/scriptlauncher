@@ -258,7 +258,7 @@ def execute(scriptname):
         output=subprocess.check_output(
             command,
             stderr=subprocess.STDOUT,
-            cwd= workingdir,
+            cwd= str(workingdir),
         )
     except subprocess.CalledProcessError as e:
         output=e.output
