@@ -14,7 +14,7 @@
             {% else %}
                 <p><a id="{{category+'-link'}}" href="#">{{category}}</a></p>
             {% endif %}
-            <div id="{{category}}" class="script-list" style="display:none">
+            <div id="{{category}}" class="script-list">
                 {% for scriptname,script in values.scripts.items() %}
                     <li><a href='/runner/{{scriptname}}'>{{script.title}}</a></li>
                 {% endfor %}
