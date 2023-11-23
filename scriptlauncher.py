@@ -35,6 +35,8 @@ import configdb
 
 
 def requires_auth(f):
+    if os.environ.get('DISABLE_AUTH'):
+        return f
     @functools.wraps(f)
     def decorated(*args, **kwd):
         auth = request.authorization
