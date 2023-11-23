@@ -180,9 +180,9 @@ def download(scriptname, param_name, filename=None):
         return send_from_directory(
             dir,
             session[param_name],
-            attachment_filename=filename,
+            download_name=filename,
             as_attachment=True,
-            cache_timeout = -1,
+            max_age=None,
             )
     except IOError:
         return fileNotAvailable()
